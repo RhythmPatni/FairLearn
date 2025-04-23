@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FairLearn AI - Adaptive Learning Platform</title>
+  <style>
+    /* Base styles from previous response - Ensure all necessary styles are present */
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1e40af;
+      --secondary: #10b981;
+      --dark: #1f2937;
+      --light: #f3f4f6;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --success: #10b981;
+      --text: #374151;
+      --border: #d1d5db;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f9fafb;
+      color: var(--text);
+      line-height: 1.6;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .sr-only { /* Screen reader only */
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    header {
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .logo svg { margin-right: 0.5rem; }
+
+    nav ul { display: flex; list-style: none; gap: 1.5rem; }
+
+    nav a.nav-link { /* Specific class for main nav links */
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 500;
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      transition: background-color 0.3s, color 0.3s, border-bottom-color 0.3s;
+      border-bottom: 3px solid transparent; /* Active indicator */
+    }
+    nav a.nav-link:hover { color: var(--primary); }
+    nav a.nav-link.active {
+      color: var(--primary);
+      font-weight: 600;
+      border-bottom-color: var(--primary);
+    }
+
+    .user-menu { display: flex; align-items: center; gap: 1rem; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 500;
+      cursor: pointer; transition: all 0.3s; border: none; text-decoration: none;
+    }
+    .btn-sm { padding: 0.25rem 0.5rem; font-size: 0.75rem; }
+    .btn-primary { background-color: var(--primary); color: white; }
+    .btn-primary:hover { background-color: var(--primary-dark); }
+    .btn-secondary { background-color: var(--secondary); color: white; }
+    .btn-secondary:hover { background-color: #059669; } /* Darker secondary */
+    .btn-outline { background-color: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-outline:hover { background-color: var(--light); }
+    .btn-danger { background-color: var(--danger); color: white; }
+    .btn-danger:hover { background-color: #dc2626; } /* Darker danger */
+    .btn-warning { background-color: var(--warning); color: var(--dark); }
+    .btn-warning:hover { background-color: #d97706; } /* Darker warning */
+
+
+    .avatar {
+      width: 2.5rem; height: 2.5rem; border-radius: 50%; background-color: var(--primary);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: bold; cursor: pointer;
+    }
+
+    .main-content { padding: 2rem 0; }
+
+    /* Main Content Sections (Views) */
+    .app-view { display: none; }
+    .app-view.active { display: block; }
+
+    .dashboard { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.5rem; }
+    .dashboard-header { grid-column: span 12; margin-bottom: 1rem; }
+    .dashboard-header h1 { font-size: 1.875rem; margin-bottom: 0.5rem; }
+    .dashboard-sidebar { grid-column: span 3; }
+    .dashboard-main { grid-column: span 9; }
+    .full-width-main { grid-column: span 12; } /* For views without sidebar */
+
+    .card {
+      background-color: white; border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem; margin-bottom: 1.5rem;
+      transition: background-color 0.3s, border 0.3s;
+    }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .card-title { font-size: 1.25rem; font-weight: 600; }
+
+    /* Progress Bars */
+    .progress-container { margin: 1rem 0; }
+    .progress-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+    .progress-bar { height: 0.5rem; background-color: var(--light); border-radius: 0.25rem; overflow: hidden; }
+    .progress-value { height: 100%; background-color: var(--primary); transition: background-color 0.3s, width 0.5s; }
+     /* Different colors for progress */
+    .progress-value.warning { background-color: var(--warning); }
+    .progress-value.danger { background-color: var(--danger); }
+    .progress-value.success { background-color: var(--success); }
+
+
+    /* Grids */
+    .courses-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; text-align: center; }
+    .stats-item .stat-value { font-size: 1.5rem; font-weight: 600; }
+    .stats-item .stat-label { font-size: 0.875rem; color: #6b7280; }
+
+    /* Course Card */
+    .course-card { /* Styles as before */ }
+    .course-image { /* Styles as before */ }
+    .course-content { /* Styles as before */ }
+    .course-title { /* Styles as before */ }
+    .course-description { /* Styles as before */ }
+    .course-progress { /* Styles as before */ }
+
+    /* Assessment Elements */
+    .assessment-card { /* Styles as before */ }
+    .assessment-header { /* Styles as before */ }
+    .assessment-title { /* Styles as before */ }
+    .assessment-meta { /* Styles as before */ }
+    .assessment-options { /* Styles as before */ }
+    .assessment-option { /* Styles as before */ }
+    .assessment-option.selected { /* Styles as before */ }
+    .assessment-option-icon { /* Styles as before */ }
+
+    /* Indicators & Alerts */
+    .fairness-indicator {
+      display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem; background-color: #dbeafe; color: var(--primary);
+      font-size: 0.75rem; font-weight: 500; transition: background-color 0.3s, color 0.3s;
+    }
+    .fairness-indicator svg { width: 16px; height: 16px; }
+    .fairness-indicator.warning { background-color: #fef3c7; color: #ca8a04; } /* Warning yellow */
+    .fairness-indicator.danger { background-color: #fee2e2; color: var(--danger); } /* Danger red */
+    .fairness-indicator.success { background-color: #d1fae5; color: var(--success); } /* Success green */
+
+    .fairness-alert {
+      background-color: #fee2e2; border-left: 4px solid var(--danger); padding: 1rem; /* Increased padding */
+      margin-bottom: 1rem; transition: background-color 0.3s, border-left-color 0.3s;
+    }
+    .fairness-alert h3 { font-size: 1rem; margin-bottom: 0.5rem; color: var(--danger); }
+
+    /* Recommendations */
+    .recommendations { margin-top: 1rem; }
+    .recommendation { /* Styles as before */ }
+    .recommendation-title { /* Styles as before */ }
+    .recommendation-text { /* Styles as before */ }
+
+    /* Module Specific */
+    .module-content { /* Styles as before */ }
+    .module-nav { /* Styles as before */ }
+    .module-nav button { /* Styles as before */ }
+    .module-nav button.active { /* Styles as before */ }
+
+    /* Modal */
+    .modal-backdrop { /* Styles as before */ }
+    .modal-backdrop.show { /* Styles as before */ }
+    .modal { /* Styles as before */ }
+    .modal-header { /* Styles as before */ }
+    .modal-title { /* Styles as before */ }
+    .modal-close { /* Styles as before */ }
+    .modal-body { /* Styles as before */ }
+    .modal-body .student-insight-section { margin-bottom: 1rem; }
+    .modal-body .student-insight-section h4 { font-size: 1rem; margin-bottom: 0.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.25rem; }
+    .modal-footer { /* Styles as before */ }
+
+    /* Accessibility Panel & Toggles */
+    .accessibility-controls {
+      padding: 1rem; background-color: var(--light);
+      border-radius: 0 0 0.375rem 0.375rem; margin-bottom: 1rem;
+      border: 1px solid var(--border); border-top: none;
+      position: absolute; top: 100%; left: 0; right: 0; max-width: 1200px;
+      margin: 0 auto; z-index: 90; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+    .accessibility-options { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    /* Focus Visible */
+    :focus-visible { /* Styles as before */ }
+    :focus:not(:focus-visible) { /* Styles as before */ }
+    /* High Contrast */
+    .high-contrast { /* Styles as before */ }
+    /* Large Text */
+    .large-text { /* Styles as before */ }
+    /* Reduced Motion */
+    @media (prefers-reduced-motion: reduce) { /* Styles as before */ }
+    .reduced-motion *, .reduced-motion ::before, .reduced-motion ::after { /* Styles as before */ }
+    /* SR Announce */
+    .sr-announce { /* Styles as before */ }
+    /* Skip Link */
+    .skip-to-content { /* Styles as before */ }
+    .skip-to-content:focus { /* Styles as before */ }
+
+    /* Educator View Specific */
+    .student-list { list-style: none; padding: 0; }
+    .student-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.75rem; border-bottom: 1px solid var(--border);
+      gap: 1rem; flex-wrap: wrap; transition: background-color 0.2s;
+    }
+     .student-item:last-child { border-bottom: none; }
+     .student-item:hover { background-color: var(--light); } /* Hover effect */
+
+    .student-info { display: flex; align-items: center; gap: 0.75rem; flex-grow: 1; min-width: 200px; }
+    .student-info .student-name { font-weight: 600; }
+    .student-info .student-details { font-size: 0.875rem; color: #6b7280; }
+
+    .student-meta { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
+    .student-meta .btn-sm { white-space: nowrap; } /* Prevent small buttons wrapping */
+
+    .fairness-chart { /* Styles as before */ }
+    .fairness-chart.placeholder { font-style: italic; color: #6b7280; } /* Placeholder text style */
+
+    .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; /* Increased margin */ transition: border-bottom-color 0.3s; }
+    .tab {
+      padding: 0.75rem 1rem; border: none; background: none; cursor: pointer; font-weight: 500;
+      border-bottom: 3px solid transparent; /* Match nav link indicator */ color: var(--text); transition: all 0.3s;
+      margin-bottom: -1px; /* Overlap border-bottom */
+    }
+    .tab.active { border-bottom-color: var(--primary); color: var(--primary); font-weight: 600; }
+
+    /* Forms */
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; margin-bottom: 0.25rem; font-weight: 500; }
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group select,
+    .form-group textarea {
+        width: 100%; padding: 0.5rem; border: 1px solid var(--border);
+        border-radius: 0.375rem; font-size: 1rem;
+    }
+    .form-group textarea { min-height: 100px; }
+    .form-group .checkbox-group { display: flex; align-items: center; gap: 0.5rem; }
+
+
+    /* Offline Mode */
+    .offline-indicator { /* Styles as before */ }
+    body.offline .offline-indicator { /* Styles as before */ }
+
+    /* Responsive */
+    @media (max-width: 992px) { /* Styles as before */ }
+    @media (max-width: 768px) { /* Styles as before */ }
+
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-to-content">Skip to main content</a>
+
+  <header>
+    <div class="container">
+      <div class="navbar">
+        <a href="#" class="logo" id="logo-link" data-view="student-view">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">/* Logo SVG */</svg>
+          FairLearn AI
+        </a>
+        <nav aria-label="Main navigation">
+          <ul role="menubar">
+            <li role="none"><a href="#" role="menuitem" class="nav-link active" data-view="student-view">Dashboard</a></li>
+            <li role="none"><a href="#" role="menuitem" class="nav-link" data-view="courses-view">My Courses</a></li>
+            <li role="none"><a href="#" role="menuitem" class="nav-link" data-view="assessment-view">Assessments</a></li>
+            <li role="none"><a href="#" role="menuitem" class="nav-link" data-view="progress-view">Progress</a></li>
+            <li role="none"><a href="#" role="menuitem" class="nav-link" data-view="help-view">Help</a></li>
+          </ul>
+        </nav>
+        <div class="user-menu">
+          <button id="accessibility-toggle" class="btn btn-outline" aria-label="Accessibility options" aria-expanded="false" aria-controls="accessibility-panel">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"> /* Accessibility Icon */</svg>
+             <span class="sr-only">Toggle Accessibility Options</span>
+             <span class="offline-indicator" aria-hidden="true">Offline</span>
+          </button>
+          <button id="view-toggle" class="btn btn-outline" aria-label="Switch to Educator View">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">/* Role Switch Icon */</svg>
+             <span class="view-toggle-text">Educator View</span>
+          </button>
+          <div class="avatar" aria-label="User profile menu" tabindex="0" role="button" aria-expanded="false">JS</div>
+        </div>
+      </div>
+    </div>
+     <div id="accessibility-panel" class="accessibility-controls" style="display: none;" role="region" aria-labelledby="accessibility-heading">
+       <h2 id="accessibility-heading" class="sr-only">Accessibility Options</h2>
+       <div class="accessibility-options">
+         <button class="btn btn-outline" id="high-contrast-toggle" aria-pressed="false">Toggle High Contrast</button>
+         <button class="btn btn-outline" id="large-text-toggle" aria-pressed="false">Toggle Large Text</button>
+         <button class="btn btn-outline" id="reduced-motion-toggle" aria-pressed="false">Toggle Reduced Motion</button>
+         <button class="btn btn-outline" id="offline-mode-toggle" aria-pressed="false">Toggle Offline Mode</button>
+       </div>
+     </div>
+  </header>
+
+  <main class="main-content" id="main-content">
+    <div class="container">
+      <div id="app-content">
+
+        <!-- ========================= -->
+        <!-- STUDENT VIEWS             -->
+        <!-- ========================= -->
+
+        <!-- Student Dashboard View -->
+        <div id="student-view" class="app-view active">
+          <div class="dashboard">
+            <div class="dashboard-header">
+              <h1>Welcome back, Jamie</h1>
+              <p>Continue your learning journey with personalized recommendations.</p>
+            </div>
+            <div class="dashboard-sidebar">
+              <!-- My Progress Card -->
+              <div class="card" role="region" aria-labelledby="progress-heading"> /* Progress Card Content */ </div>
+              <!-- Upcoming Assessments Card -->
+              <div class="card" role="region" aria-labelledby="upcoming-heading"> /* Upcoming Assessments Card Content */ </div>
+            </div>
+            <div class="dashboard-main">
+              <!-- Continue Learning Card -->
+              <div class="card" role="region" aria-labelledby="learning-heading"> /* Continue Learning Card Content */ </div>
+              <!-- Recommendations Card -->
+              <div class="card" role="region" aria-labelledby="recommendations-heading"> /* Recommendations Card Content */ </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- My Courses View -->
+        <div id="courses-view" class="app-view">
+             <div class="dashboard-header"><h1>My Courses</h1> /* Header content */ </div>
+             <div class="card"> /* Enrolled Courses Grid */ </div>
+             <div class="card"> /* Available Courses Placeholder */ </div>
+        </div>
+
+        <!-- Assessment View (Main Page) -->
+        <div id="assessment-view" class="app-view">
+             <div class="dashboard">
+                 <div class="dashboard-header"><h1>Assessments</h1> /* Header Content */ </div>
+                 <div class="full-width-main">
+                     <div class="card" role="region" aria-labelledby="upcoming-assessments-heading"> /* Upcoming Assessments List */ </div>
+                     <div class="card" role="region" aria-labelledby="completed-assessments-heading"> /* Completed Assessments Placeholder */ </div>
+                     <div class="card" role="region" aria-labelledby="assessment-options-info-heading"> /* Info about Options */ </div>
+                 </div>
+             </div>
+        </div>
+
+         <!-- Assessment Options Sub-View -->
+         <div id="assessment-options-subview" class="app-view">
+             <div class="dashboard">
+                 <div class="dashboard-header"> /* Header + Back Button */ </div>
+                 <div class="full-width-main">
+                     <div class="card" role="region" aria-labelledby="assessment-options-heading-sub"> /* Assessment Options Radiogroup */ </div>
+                 </div>
+             </div>
+         </div>
+
+        <!-- Progress View -->
+         <div id="progress-view" class="app-view">
+             <div class="dashboard-header"><h1>My Progress</h1> /* Header Content */ </div>
+             <div class="card"> /* Overall Snapshot */ </div>
+             <div class="card"> /* Progress by Course */ </div>
+             <div class="card"> /* Skills Mastery */ </div>
+         </div>
+
+        <!-- Help View -->
+         <div id="help-view" class="app-view">
+            <div class="dashboard-header"><h1>Help & Support</h1> /* Header Content */ </div>
+             <div class="card"> /* FAQs */ </div>
+             <div class="card"> /* Tutorials */ </div>
+             <div class="card"> /* Contact Support */ </div>
+         </div>
+
+        <!-- Learning Module View (Sub-view) -->
+        <div id="module-view" class="app-view">
+             <div class="dashboard">
+                 <div class="dashboard-header"> /* Module Title + Back Buttons */ </div>
+                 <div class="dashboard-sidebar"> /* Module Progress + Preferences */ </div>
+                 <div class="dashboard-main"> /* Module Content + Tabs */ </div>
+             </div>
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- EDUCATOR VIEW             -->
+        <!-- ========================= -->
+        <div id="educator-view" class="app-view">
+           <div class="dashboard">
+             <div class="dashboard-header">
+               <h1>Educator Dashboard</h1>
+               <p>Monitor student progress, manage content, and ensure fairness across your classes.</p>
+             </div>
+
+             <!-- Educator Tabs -->
+             <div class="tabs" role="tablist" aria-label="Educator Sections">
+               <button class="tab active" role="tab" aria-selected="true" aria-controls="panel-class-overview" id="tab-class-overview">Class Overview</button>
+               <button class="tab" role="tab" aria-selected="false" aria-controls="panel-assessment-analysis" id="tab-assessment-analysis" tabindex="-1">Assessment Analysis</button>
+               <button class="tab" role="tab" aria-selected="false" aria-controls="panel-content-management" id="tab-content-management" tabindex="-1">Content Management</button>
+               <button class="tab" role="tab" aria-selected="false" aria-controls="panel-fairness-monitoring" id="tab-fairness-monitoring" tabindex="-1">Fairness Insights</button>
+             </div>
+
+             <!-- Educator Panels -->
+             <div class="full-width-main">
+               <!-- Class Overview Panel -->
+               <div id="panel-class-overview" role="tabpanel" aria-labelledby="tab-class-overview">
+                  <div class="card">
+                    <div class="card-header">
+                      <h2 class="card-title">Class Progress: Algebra 101</h2>
+                      <div class="card-actions">
+                         <select aria-label="Select Class" style="padding: 0.4rem; border: 1px solid var(--border); border-radius: 0.375rem; margin-right: 0.5rem;">
+                            <option selected>Algebra 101</option>
+                            <option>Literature 202</option>
+                            <option>Chemistry Basics</option>
+                         </select>
+                         <button class="btn btn-outline btn-sm">Export Data</button>
+                      </div>
+                    </div>
+
+                    <!-- Key Metrics -->
+                    <div class="stats-grid" style="margin-bottom: 1.5rem;">
+                       <div class="stats-item">
+                          <div class="stat-value">85%</div>
+                          <div class="stat-label">Avg. Completion</div>
+                       </div>
+                       <div class="stats-item">
+                          <div class="stat-value">78%</div>
+                          <div class="stat-label">Avg. Score</div>
+                       </div>
+                       <div class="stats-item">
+                          <div class="stat-value">4</div>
+                          <div class="stat-label">Students Struggling</div>
+                       </div>
+                       <div class="stats-item">
+                          <div class="stat-value">1</div>
+                          <div class="stat-label">Fairness Alerts</div>
+                       </div>
+                    </div>
+
+                    <!-- Fairness Alert Example -->
+                    <div class="fairness-alert" role="alert">
+                      <h3>Fairness Alert: Potential Assessment Bias</h3>
+                      <p>Analysis indicates students favoring 'Verbal Explanation' assessments are performing significantly lower on the recent 'Algebra Quiz (Module 3)' compared to peers choosing other formats. This may suggest a mismatch between the quiz format and learning objectives, or potential bias in the quiz content for certain learning styles[3][5].</p>
+                      <button class="btn btn-warning btn-sm view-recommendations" style="margin-top: 0.5rem;">View Recommendations</button>
+                    </div>
+
+                     <!-- Recommendations Section (Initially hidden or part of alert details) -->
+                     <div class="card recommendation-details" style="display: none; background-color: #fffbeb; border: 1px solid var(--warning);">
+                        <h3 style="color: #b45309;">Recommended Actions</h3>
+                        <ul>
+                           <li>Review Algebra Quiz (Module 3) questions for potential bias against verbal learners.</li>
+                           <li>Consider adding alternative ways to demonstrate understanding within the quiz itself (e.g., short explanation fields).</li>
+                           <li>Offer supplementary practice materials focused on translating verbal understanding to written problem-solving for affected students.</li>
+                           <li>Monitor performance on the next assessment closely.</li>
+                        </ul>
+                        <button class="btn btn-outline btn-sm close-recommendations" style="margin-top: 1rem;">Close Recommendations</button>
+                     </div>
+
+                    <!-- Student List -->
+                    <h3 style="margin: 1.5rem 0 0.5rem;">Student Roster</h3>
+                    <ul class="student-list" aria-label="Student list for Algebra 101">
+                      <li class="student-item" data-student-id="1">
+                        <div class="student-info">
+                          <div class="avatar" style="background-color: var(--primary);">JS</div>
+                          <div>
+                            <div class="student-name">Jamie Smith</div>
+                            <div class="student-details">Visual Learner • Avg. 88%</div>
+                          </div>
+                        </div>
+                        <div class="student-meta">
+                          <div class="fairness-indicator success">
+                            <svg>/* Check Icon */</svg> Pathway Optimized
+                          </div>
+                          <button class="btn btn-outline btn-sm view-student-details">View Insights</button>
+                          <button class="btn btn-secondary btn-sm customize-student-path">Customize</button>
+                        </div>
+                      </li>
+                      <li class="student-item" data-student-id="2">
+                        <div class="student-info">
+                          <div class="avatar" style="background-color: #8b5cf6;">MJ</div>
+                          <div>
+                            <div class="student-name">Miguel Johnson</div>
+                            <div class="student-details">Verbal Learner • Avg. 65%</div>
+                          </div>
+                        </div>
+                         <div class="student-meta">
+                          <div class="fairness-indicator danger">
+                             <svg>/* Alert Icon */</svg> Performance Gap
+                          </div>
+                          <button class="btn btn-outline btn-sm view-student-details">View Insights</button>
+                          <button class="btn btn-secondary btn-sm customize-student-path">Customize</button>
+                        </div>
+                      </li>
+                       <li class="student-item" data-student-id="3">
+                        <div class="student-info">
+                          <div class="avatar" style="background-color: #10b981;">AK</div>
+                          <div>
+                            <div class="student-name">Aisha Khan</div>
+                            <div class="student-details">Interactive Learner • Avg. 82%</div>
+                          </div>
+                        </div>
+                         <div class="student-meta">
+                           <div class="fairness-indicator">
+                             <svg>/* Info Icon */</svg> Standard Pathway
+                           </div>
+                          <button class="btn btn-outline btn-sm view-student-details">View Insights</button>
+                          <button class="btn btn-secondary btn-sm customize-student-path">Customize</button>
+                        </div>
+                      </li>
+                       <li class="student-item" data-student-id="4">
+                        <div class="student-info">
+                          <div class="avatar" style="background-color: #f59e0b;">CL</div>
+                          <div>
+                            <div class="student-name">Chen Li</div>
+                            <div class="student-details">Text-Based Learner • Avg. 72%</div>
+                          </div>
+                        </div>
+                         <div class="student-meta">
+                           <div class="fairness-indicator warning">
+                             <svg>/* Warning Icon */</svg> Engagement Low
+                           </div>
+                          <button class="btn btn-outline btn-sm view-student-details">View Insights</button>
+                          <button class="btn btn-secondary btn-sm customize-student-path">Customize</button>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+               </div>
+
+               <!-- Assessment Analysis Panel -->
+               <div id="panel-assessment-analysis" role="tabpanel" aria-labelledby="tab-assessment-analysis" hidden>
+                  <div class="card">
+                     <div class="card-header">
+                        <h2 class="card-title">Assessment Performance Analysis</h2>
+                        <select aria-label="Select Assessment for Analysis" style="padding: 0.4rem; border: 1px solid var(--border); border-radius: 0.375rem;">
+                           <option>Algebra Quiz (Module 3)</option>
+                           <option>Literature Project (Module 2)</option>
+                           <option>All Assessments</option>
+                        </select>
+                     </div>
+                     <p style="margin-bottom: 1rem;">Analyze performance trends and identify potential issues in assessments[3][5].</p>
+                     <div class="fairness-chart placeholder" aria-label="Chart showing assessment performance breakdown by question and student group">
+                        [Assessment performance breakdown visualization placeholder]
+                     </div>
+                     <div style="margin-top: 1.5rem;">
+                        <h4>Fairness Metrics: Algebra Quiz (Module 3)</h4>
+                        <ul style="list-style: none; padding: 0;">
+                           <li style="margin-bottom: 0.5rem;">Performance Gap (Verbal vs. Visual Learners): <span style="color: var(--danger); font-weight: bold;">-18% (Significant)</span></li>
+                           <li style="margin-bottom: 0.5rem;">Question Difficulty Index (Q5): High for all groups</li>
+                           <li style="margin-bottom: 0.5rem;">Differential Item Functioning (Q3): Potential bias detected (Needs Review)</li>
+                        </ul>
+                        <button class="btn btn-outline btn-sm">Run Detailed Bias Report</button>
+                     </div>
+                  </div>
+               </div>
+
+               <!-- Content Management Panel -->
+               <div id="panel-content-management" role="tabpanel" aria-labelledby="tab-content-management" hidden>
+                   <div class="card">
+                     <div class="card-header">
+                        <h2 class="card-title">Content & Assessment Management</h2>
+                        <div>
+                           <button class="btn btn-primary btn-sm">Create New Content</button>
+                           <button class="btn btn-primary btn-sm" style="margin-left: 0.5rem;">Create New Assessment</button>
+                        </div>
+                     </div>
+                      <p style="margin-bottom: 1rem;">Create, modify, and analyze learning content and assessments with integrated fairness checks[3][5].</p>
+
+                      {/* Placeholder for Content/Assessment List */}
+                      <div style="border: 1px solid var(--border); border-radius: 0.375rem; padding: 1rem; margin-bottom: 1rem;">
+                         <h4>Existing Content / Assessments</h4>
+                         <ul>
+                            <li>Algebra Module 3: Linear Equations <button class="btn btn-outline btn-sm" style="margin-left: 1rem;">Edit</button> <button class="btn btn-outline btn-sm">Analyze</button></li>
+                            <li>Algebra Quiz (Module 3) <button class="btn btn-outline btn-sm" style="margin-left: 1rem;">Edit</button> <button class="btn btn-outline btn-sm">Analyze</button> <span class="fairness-indicator danger" style="margin-left: 0.5rem;">Bias Alert</span></li>
+                            {/* ... more items */}
+                         </ul>
+                      </div>
+
+                      {/* Placeholder for Creation Form Snippet */}
+                      <div style="border: 1px dashed var(--border); border-radius: 0.375rem; padding: 1rem;">
+                         <h4>Create New Assessment (Example Snippet)</h4>
+                         <div class="form-group">
+                             <label for="assessment-name">Assessment Name</label>
+                             <input type="text" id="assessment-name" placeholder="e.g., Module 4 Quiz">
+                         </div>
+                         <div class="form-group">
+                              <label for="assessment-type">Allowed Formats</label>
+                              <div class="checkbox-group">
+                                 <input type="checkbox" id="format-quiz" checked> <label for="format-quiz">Quiz</label>
+                                 <input type="checkbox" id="format-visual"> <label for="format-visual">Visual Project</label>
+                                 <input type="checkbox" id="format-verbal"> <label for="format-verbal">Verbal Explanation</label>
+                              </div>
+                         </div>
+                         <div class="form-group">
+                             <label>Fairness Check Status</label>
+                             <div class="fairness-indicator">
+                                 <svg>/* Info Icon */</svg> Pending Content Addition
+                             </div>
+                         </div>
+                         <button class="btn btn-secondary">Add Questions / Criteria</button>
+                          <button class="btn btn-outline" style="margin-left: 0.5rem;">Run Bias Check</button>
+                      </div>
+                  </div>
+               </div>
+
+               <!-- Fairness Monitoring Panel -->
+               <div id="panel-fairness-monitoring" role="tabpanel" aria-labelledby="tab-fairness-monitoring" hidden>
+                   <div class="card">
+                     <div class="card-header">
+                        <h2 class="card-title">Class Fairness Insights: Algebra 101</h2>
+                         <button class="btn btn-outline btn-sm">View Institutional Report</button>
+                     </div>
+                     <p style="margin-bottom: 1rem;">Monitor fairness indicators, equity trends, and resource utilization across different student groups within this class[4].</p>
+                      <div class="fairness-chart placeholder" aria-label="Chart showing performance distribution across different demographic groups">
+                        [Performance distribution by demographic group placeholder]
+                     </div>
+                     <div class="fairness-chart placeholder" style="margin-top: 1.5rem;" aria-label="Chart showing assessment format choice vs performance">
+                        [Assessment format choice vs. performance correlation placeholder]
+                     </div>
+                     <div style="margin-top: 1.5rem;">
+                        <h4>Key Fairness Observations</h4>
+                        <ul>
+                           <li>Consistent performance across reported gender identities.</li>
+                           <li>Slight negative correlation between choosing 'Verbal Explanation' and overall course grade (matches alert).</li>
+                           <li>Resource utilization balanced across learning style preferences.</li>
+                        </ul>
+                         <button class="btn btn-outline btn-sm">Generate Full Equity Report</button>
+                     </div>
+                  </div>
+               </div>
+             </div>
+           </div>
+         </div>
+
+      </div> <!-- End #app-content -->
+    </div> <!-- End .container -->
+  </main>
+
+  <!-- Screen reader announcement region -->
+  <div class="sr-announce" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Modal for Student Insights & General Use -->
+   <div class="modal-backdrop" id="main-modal-backdrop">
+     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title-main">
+       <div class="modal-header">
+         <h2 class="modal-title" id="modal-title-main">Modal Title</h2>
+         <button class="modal-close" aria-label="Close modal">&times;</button>
+       </div>
+       <div class="modal-body" id="modal-body-main">
+         <!-- Content will be injected here -->
+       </div>
+       <div class="modal-footer" id="modal-footer-main">
+         <button class="btn btn-outline modal-close">Close</button>
+         {/* Optional confirm button can be added dynamically */}
+       </div>
+     </div>
+   </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- DOM Elements ---
+    const body = document.body;
+    const accessibilityPanel = document.getElementById('accessibility-panel');
+    const accessibilityToggle = document.getElementById('accessibility-toggle');
+    const highContrastToggle = document.getElementById('high-contrast-toggle');
+    const largeTextToggle = document.getElementById('large-text-toggle');
+    const reducedMotionToggle = document.getElementById('reduced-motion-toggle');
+    const offlineModeToggle = document.getElementById('offline-mode-toggle');
+    const viewToggle = document.getElementById('view-toggle');
+    const viewToggleText = viewToggle.querySelector('.view-toggle-text');
+    const appContent = document.getElementById('app-content');
+    const allAppViews = appContent.querySelectorAll('.app-view');
+    const navLinks = document.querySelectorAll('nav .nav-link');
+    const logoLink = document.getElementById('logo-link');
+    const srAnnounce = document.querySelector('.sr-announce');
+    const mainModalBackdrop = document.getElementById('main-modal-backdrop');
+    const mainModalTitle = document.getElementById('modal-title-main');
+    const mainModalBody = document.getElementById('modal-body-main');
+    const mainModalFooter = document.getElementById('modal-footer-main');
+    const mainModalCloseButtons = mainModalBackdrop.querySelectorAll('.modal-close');
+
+    // --- State ---
+    let currentRoleView = 'student-view'; // 'student-view' or 'educator-view'
+    let currentSubView = 'student-view'; // ID of the currently active view
+    let modalOriginElement = null; // Track which element opened the modal
+
+    // --- Utility Functions ---
+    function announce(message) {
+        clearTimeout(announce.timer);
+        announce.timer = setTimeout(() => {
+            srAnnounce.textContent = message;
+        }, 150);
+    }
+
+    // --- View Switching Logic ---
+    function switchView(targetViewId, options = { updateHistory: true }) {
+        console.log(`Switching view to: ${targetViewId}`);
+        const targetView = document.getElementById(targetViewId);
+
+        if (!targetView) {
+            console.error(`View with ID ${targetViewId} not found. Falling back to ${currentRoleView}.`);
+            switchView(currentRoleView, { updateHistory: false }); // Fallback
+            return;
+        }
+
+        // Hide all views
+        allAppViews.forEach(view => view.classList.remove('active'));
+        // Show target view
+        targetView.classList.add('active');
+        currentSubView = targetViewId;
+
+        // Update nav link active state for top-level views
+        const isTopLevelNav = Array.from(navLinks).some(link => link.getAttribute('data-view') === targetViewId);
+        navLinks.forEach(link => {
+            link.classList.toggle('active', link.getAttribute('data-view') === targetViewId);
+        });
+
+        // Focus management
+        const focusTarget = targetView.querySelector('h1') || targetView;
+        focusTarget.setAttribute('tabindex', '-1');
+        focusTarget.focus({ preventScroll: true });
+        window.scrollTo(0, 0);
+
+        // Update browser history (optional)
+        if (options.updateHistory && history.pushState) {
+            try {
+                const isPrimaryView = isTopLevelNav || targetViewId === 'educator-view' || targetViewId === 'student-view';
+                const hash = isPrimaryView ? `#${targetViewId}` : ''; // Only hash primary views
+                const currentPath = window.location.pathname + window.location.search;
+                history.pushState({ view: targetViewId, role: currentRoleView }, '', currentPath + hash);
+            } catch (e) { console.warn("Could not update history state:", e); }
+        }
+
+        announce(`Navigated to ${targetView.querySelector('h1')?.textContent || targetViewId.replace(/-/g, ' ')} view.`);
+    }
+
+    // Handle browser back/forward
+    window.addEventListener('popstate', (event) => {
+        console.log("Popstate event:", event.state);
+        let viewToLoad = currentRoleView; // Default fallback
+        if (event.state && event.state.view) {
+            viewToLoad = event.state.view;
+            // Sync role state if needed
+            if (event.state.role && event.state.role !== currentRoleView) {
+                 currentRoleView = event.state.role;
+                 updateRoleToggleUI(); // Function to update button text/label
+            }
+        } else {
+            const hashView = window.location.hash.substring(1);
+            if (hashView && document.getElementById(hashView)) {
+                viewToLoad = hashView;
+                // Sync role if hash indicates a different role's main view
+                if (viewToLoad === 'educator-view' && currentRoleView !== 'educator-view') {
+                    currentRoleView = 'educator-view'; updateRoleToggleUI();
+                } else if (viewToLoad === 'student-view' && currentRoleView !== 'student-view') {
+                    currentRoleView = 'student-view'; updateRoleToggleUI();
+                }
+            }
+        }
+        switchView(viewToLoad, { updateHistory: false });
+    });
+
+
+    // --- Modal Logic ---
+    function toggleModal(show, config = {}) {
+        const {
+            title = "Information",
+            bodyHTML = "<p>Details loading...</p>",
+            footerButtons = [{ text: "Close", class: "btn-outline modal-close" }],
+            origin = null // Element that triggered the modal
+        } = config;
+
+        mainModalTitle.textContent = title;
+        mainModalBody.innerHTML = bodyHTML;
+
+        // Clear existing footer buttons (except the default close if needed)
+        mainModalFooter.innerHTML = '';
+        footerButtons.forEach(btnConfig => {
+            const button = document.createElement('button');
+            button.textContent = btnConfig.text;
+            button.className = `btn ${btnConfig.class || 'btn-outline'}`;
+            if (btnConfig.id) button.id = btnConfig.id;
+            // Add specific click handlers if provided, otherwise default close
+            if (btnConfig.onClick) {
+                button.addEventListener('click', btnConfig.onClick);
+            } else if (button.classList.contains('modal-close')) {
+                button.addEventListener('click', () => toggleModal(false));
+            }
+            mainModalFooter.appendChild(button);
+        });
+
+        if (show) {
+            modalOriginElement = origin || document.activeElement; // Store focus origin
+            mainModalBackdrop.style.display = 'flex';
+            mainModalBackdrop.classList.add('show');
+            // Focus first focusable element in modal (usually first button)
+            setTimeout(() => mainModalFooter.querySelector('button')?.focus(), 100); // Delay needed
+            announce(`Modal opened: ${title}`);
+        } else {
+             mainModalBackdrop.classList.remove('show');
+             setTimeout(() => {
+                if (!mainModalBackdrop.classList.contains('show')) {
+                    mainModalBackdrop.style.display = 'none';
+                }
+             }, 300); // Allow animation
+             announce("Modal closed");
+             // Return focus
+             if (modalOriginElement && typeof modalOriginElement.focus === 'function') {
+                 modalOriginElement.focus();
+             }
+             modalOriginElement = null;
+        }
+    }
+
+     // Global Modal Close Handlers
+     mainModalCloseButtons.forEach(button => button.addEventListener('click', () => toggleModal(false)));
+     mainModalBackdrop.addEventListener('click', (e) => { if (e.target === mainModalBackdrop) toggleModal(false); });
+     mainModalBackdrop.addEventListener('keydown', (e) => {
+         if (e.key === 'Escape') toggleModal(false);
+         // Basic focus trapping
+         if (e.key === 'Tab') {
+             const focusable = Array.from(mainModalBackdrop.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')).filter(el => el.offsetParent !== null);
+             if (!focusable.length) return;
+             const first = focusable[0];
+             const last = focusable[focusable.length - 1];
+             if (e.shiftKey && document.activeElement === first) { last.focus(); e.preventDefault(); }
+             else if (!e.shiftKey && document.activeElement === last) { first.focus(); e.preventDefault(); }
+         }
+     });
+
+    // --- Accessibility Controls ---
+    accessibilityToggle.addEventListener('click', (e) => { /* ... (same as before) ... */ });
+    document.addEventListener('click', (e) => { /* ... (same as before for closing panel) ... */ });
+    function applyToggleState(button, className, stateName) { /* ... (same as before) ... */ }
+    highContrastToggle.addEventListener('click', () => applyToggleState(highContrastToggle, 'high-contrast', 'High contrast mode'));
+    largeTextToggle.addEventListener('click', () => applyToggleState(largeTextToggle, 'large-text', 'Large text mode'));
+    reducedMotionToggle.addEventListener('click', () => applyToggleState(reducedMotionToggle, 'reduced-motion', 'Reduced motion mode'));
+    offlineModeToggle.addEventListener('click', () => { /* ... (same as before) ... */ });
+
+    // --- Role Switching (Student/Educator) ---
+    function updateRoleToggleUI() {
+        const isStudent = currentRoleView === 'student-view';
+        viewToggleText.textContent = isStudent ? 'Educator View' : 'Student View';
+        viewToggle.setAttribute('aria-label', `Switch to ${isStudent ? 'Educator' : 'Student'} View`);
+        logoLink.setAttribute('data-view', currentRoleView); // Update logo link target
+    }
+
+    viewToggle.addEventListener('click', () => {
+        const isStudentCurrently = currentRoleView === 'student-view';
+        currentRoleView = isStudentCurrently ? 'educator-view' : 'student-view';
+        updateRoleToggleUI();
+        switchView(currentRoleView); // Switch to the dashboard of the new role
+        announce(`Switched to ${currentRoleView === 'educator-view' ? 'Educator' : 'Student'} view.`);
+    });
+
+     // --- Navigation ---
+     navLinks.forEach(link => {
+         link.addEventListener('click', (e) => {
+             e.preventDefault();
+             const targetViewId = link.getAttribute('data-view');
+             // Simple check: Educator view IDs start with 'educator-'
+             const isEducatorTarget = targetViewId.startsWith('educator');
+             const isCurrentRoleEducator = currentRoleView === 'educator-view';
+
+             // Allow navigation if the target role matches the current role
+             if (targetViewId && (isEducatorTarget === isCurrentRoleEducator)) {
+                switchView(targetViewId);
+             } else if (targetViewId) {
+                 // If roles mismatch, redirect to the current role's dashboard
+                 console.warn(`Role mismatch: Cannot navigate to ${targetViewId} from ${currentRoleView}. Redirecting.`);
+                 switchView(currentRoleView);
+             }
+         });
+     });
+
+     logoLink.addEventListener('click', (e) => {
+         e.preventDefault();
+         switchView(currentRoleView); // Go to current role's dashboard
+     });
+
+     // Generic "Back to X" Button Handler
+     function handleBackButton(e) { /* ... (same as before) ... */ }
+     document.querySelectorAll('.back-to-dashboard, .back-to-courses, .back-to-assessments').forEach(button => {
+         button.addEventListener('click', handleBackButton);
+     });
+
+    // --- Student View Interactions ---
+    document.querySelectorAll('.continue-course').forEach(button => { /* ... (same as before) ... */ });
+    document.querySelectorAll('.show-assessment-details').forEach(button => { /* ... (same as before) ... */ });
+    document.querySelectorAll('.show-assessment-options').forEach(button => { /* ... (same as before) ... */ });
+    // Add listeners for buttons inside recommendations, etc.
+    document.querySelectorAll('.recommendation .btn-sm').forEach(button => {
+        button.addEventListener('click', (e) => {
+            announce(`Starting recommended action: ${e.target.textContent} (Simulated)`);
+            // Example: Open a specific practice module or resource link
+            toggleModal(true, {title: "Recommendation Action", bodyHTML: `<p>Loading recommended content: ${e.target.textContent}...</p>`, origin: e.target});
+        });
+    });
+
+    // --- Module View Interactions ---
+    const moduleView = document.getElementById('module-view');
+    if (moduleView) { /* ... (Module view logic: solutions, hints, prefs, tabs, nav - same as before) ... */ }
+
+    // --- Assessment Options Sub-View Interactions ---
+    const assessmentOptionsView = document.getElementById('assessment-options-subview');
+    if (assessmentOptionsView) { /* ... (Assessment options selection logic - same as before) ... */ }
+
+    // --- Educator View Interactions ---
+    const educatorView = document.getElementById('educator-view');
+    if (educatorView) {
+        const educatorTabs = educatorView.querySelectorAll('.tabs .tab');
+        const educatorPanels = educatorView.querySelectorAll('.full-width-main > div[role="tabpanel"]'); // Direct children
+
+        // Educator Tab Switching
+        educatorTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                educatorTabs.forEach(t => t.classList.remove('active', 'font-semibold') || t.setAttribute('aria-selected', 'false') || t.setAttribute('tabindex', '-1'));
+                educatorPanels.forEach(p => p.hidden = true);
+
+                tab.classList.add('active', 'font-semibold');
+                tab.setAttribute('aria-selected', 'true');
+                tab.setAttribute('tabindex', '0');
+                const panel = educatorView.querySelector(`#${tab.getAttribute('aria-controls')}`);
+                if (panel) {
+                    panel.hidden = false;
+                    announce(`Selected educator tab: ${tab.textContent}`);
+                } else {
+                    console.error(`Panel not found for tab: ${tab.id}`);
+                }
+                tab.focus();
+            });
+            // Keyboard nav for educator tabs
+            tab.addEventListener('keydown', (e) => { /* ... (Arrow key, Home, End logic) ... */ });
+        });
+
+        // "View Recommendations" Button
+        const viewRecsBtn = educatorView.querySelector('.view-recommendations');
+        const recsDetails = educatorView.querySelector('.recommendation-details');
+        const closeRecsBtn = educatorView.querySelector('.close-recommendations');
+
+        if (viewRecsBtn && recsDetails) {
+            viewRecsBtn.addEventListener('click', (e) => {
+                recsDetails.style.display = 'block';
+                announce("Showing recommended actions for fairness alert.");
+                recsDetails.querySelector('button, a')?.focus(); // Focus first element inside
+                 viewRecsBtn.style.display = 'none'; // Hide the button once details are shown
+                 modalOriginElement = e.target; // Store origin for focus return on close
+            });
+        }
+         if (closeRecsBtn && recsDetails && viewRecsBtn) {
+             closeRecsBtn.addEventListener('click', () => {
+                 recsDetails.style.display = 'none';
+                 announce("Recommendations hidden.");
+                 viewRecsBtn.style.display = 'inline-flex'; // Show the button again
+                 modalOriginElement?.focus(); // Return focus
+                 modalOriginElement = null;
+             });
+         }
+
+
+        // "View Student Insights" Button (using event delegation)
+        const studentList = educatorView.querySelector('.student-list');
+        if (studentList) {
+            studentList.addEventListener('click', (e) => {
+                const targetButton = e.target.closest('.view-student-details');
+                if (targetButton) {
+                    const studentItem = targetButton.closest('.student-item');
+                    const studentId = studentItem?.dataset.studentId;
+                    const studentName = studentItem?.querySelector('.student-name')?.textContent || 'Student';
+                    console.log(`View details for student ID: ${studentId}`);
+
+                    // --- Fetch/Generate Student Insight Data (Simulated) ---
+                    const insightData = getStudentInsightData(studentId, studentName); // Simulate fetching data
+
+                    // --- Populate Modal ---
+                    toggleModal(true, {
+                        title: `Student Insights: ${insightData.name}`,
+                        bodyHTML: insightData.html,
+                        footerButtons: [
+                            { text: "Customize Pathway", class: "btn-secondary", onClick: () => { announce(`Customize pathway for ${insightData.name} (Simulated)`); } },
+                            { text: "Close", class: "btn-outline modal-close" }
+                        ],
+                        origin: targetButton
+                    });
+                }
+
+                 const customizeButton = e.target.closest('.customize-student-path');
+                 if (customizeButton) {
+                     const studentItem = customizeButton.closest('.student-item');
+                     const studentName = studentItem?.querySelector('.student-name')?.textContent || 'Student';
+                     announce(`Opening customization options for ${studentName} (Simulated)`);
+                     toggleModal(true, {
+                        title: `Customize for ${studentName}`,
+                        bodyHTML: `<p>Interface for customizing learning path or assessments for ${studentName} would appear here.</p>`,
+                        origin: customizeButton
+                     });
+                 }
+            });
+        }
+
+        // Add basic click handlers for other educator buttons (Create, Export, Analyze etc.)
+        educatorView.querySelectorAll('button:not(.tab):not(.view-student-details):not(.customize-student-path):not(.view-recommendations):not(.close-recommendations)').forEach(button => {
+                button.addEventListener('click', (e) => {
+                     announce(`Action: ${button.textContent.trim()} (Simulated).`);
+                     console.log(`Educator button clicked: ${button.textContent.trim()}`);
+                     // Could open modals for creation forms, reports etc.
+                     toggleModal(true, {title: `Action: ${button.textContent.trim()}`, bodyHTML: `<p>Simulating action: ${button.textContent.trim()}...</p>`, origin: e.target });
+                });
+        });
+
+    } // End if(educatorView)
+
+     // --- Helper to Generate Mock Student Insight HTML for Modal ---
+     function getStudentInsightData(studentId, studentName) {
+         // In a real app, this would fetch data based on studentId
+         let progress = 80;
+         let fairnessStatus = 'Standard Pathway';
+         let fairnessClass = '';
+         let recommendations = '<li>Monitor engagement in discussion forums.</li>';
+         let recentActivity = '<li>Completed Module 3 Practice Quiz (Score: 85%)</li><li>Viewed Module 4 Introduction Video</li>';
+         let avgScore = 88;
+
+         // Mock data variations based on ID from list
+         if (studentId === '2') { // Miguel Johnson
+             progress = 65; fairnessStatus = 'Performance Gap Detected'; fairnessClass = 'danger';
+             recommendations = '<li>Review Algebra Quiz results for specific misconceptions.</li><li>Assign supplemental visual practice activities.</li><li>Check assessment format preference alignment.</li>';
+             recentActivity = '<li>Attempted Algebra Quiz (Module 3) (Score: 55%)</li><li>Posted question in Module 3 Discussion</li>';
+             avgScore = 65;
+         } else if (studentId === '4') { // Chen Li
+              progress = 72; fairnessStatus = 'Low Engagement'; fairnessClass = 'warning';
+              recommendations = '<li>Assign short, text-based summary tasks.</li><li>Recommend relevant readings based on recent activity.</li>';
+              recentActivity = '<li>Read Module 3 Text Content</li><li>Skipped Module 3 Practice Quiz</li>';
+              avgScore = 72;
+         } else if (studentId === '1') { // Jamie Smith
+             progress = 75; fairnessStatus = 'Pathway Optimized'; fairnessClass = 'success';
+              recommendations = '<li>Offer advanced challenge problems for Module 3.</li>';
+             avgScore = 88; // Updated avg score to match list
+         }
+
+
+         return {
+             name: studentName,
+             html: `
+                 <div class="student-insight-section">
+                     <h4>Overall Status</h4>
+                     <p><strong>Average Score:</strong> ${avgScore}%</p>
+                     <p><strong>Current Module Progress (Algebra):</strong> ${progress}%</p>
+                     <p><strong>Learning Style Preference:</strong> ${studentId === '2' ? 'Verbal' : studentId === '4' ? 'Text-Based' : studentId === '1' ? 'Visual' : 'Interactive'}</p>
+                     <p><strong>Fairness Status:</strong> <span class="fairness-indicator ${fairnessClass}">${fairnessStatus}</span></p>
+                 </div>
+                 <div class="student-insight-section">
+                     <h4>Recent Activity</h4>
+                     <ul style="list-style: disc; margin-left: 1.5rem;">${recentActivity}</ul>
+                 </div>
+                 <div class="student-insight-section">
+                     <h4>Assessment Summary</h4>
+                     <p>Module 1 Quiz: 90%</p>
+                     <p>Module 2 Project: 85%</p>
+                     <p>Module 3 Quiz: ${studentId === '2' ? '55%' : studentId === '4' ? 'N/A' : '85%'} <span style="font-size: 0.8em; color: ${avgScore < 70 ? 'var(--danger)' : 'inherit'};">(${avgScore < 70 ? 'Below Avg' : 'Above Avg'})</span></p>
+                 </div>
+                 <div class="student-insight-section">
+                     <h4>System Recommendations</h4>
+                     <ul style="list-style: disc; margin-left: 1.5rem;">${recommendations}</ul>
+                 </div>
+             `
+         };
+     }
+
+
+    // --- Initial Load ---
+    function initializeApp() {
+        // Determine initial view based on URL hash or default role view
+        let initialView = currentRoleView;
+        const hash = window.location.hash.substring(1);
+
+        if (hash && document.getElementById(hash)) {
+            // Check if hash corresponds to a primary view (nav link or role dashboard)
+            const isPrimaryHashView = Array.from(navLinks).some(link => link.getAttribute('data-view') === hash) || hash === 'educator-view' || hash === 'student-view';
+
+            if (isPrimaryHashView) {
+                initialView = hash;
+                // Sync role state based on hash
+                if (initialView === 'educator-view' && currentRoleView !== 'educator-view') {
+                    currentRoleView = 'educator-view'; updateRoleToggleUI();
+                } else if (initialView !== 'educator-view' && currentRoleView === 'educator-view') {
+                     // If hash is a student view but role was educator, switch back
+                    currentRoleView = 'student-view'; updateRoleToggleUI();
+                }
+            } else {
+                 // If hash is not a primary view, clear it and load role dashboard
+                console.log(`Invalid initial hash '#${hash}', loading default view.`);
+                if (history.replaceState) {
+                    history.replaceState(null, '', window.location.pathname + window.location.search);
+                }
+                initialView = currentRoleView;
+            }
+        } else {
+            // No hash or invalid hash, load default role dashboard
+             if (history.replaceState && window.location.hash) { // Clear invalid hash
+                history.replaceState(null, '', window.location.pathname + window.location.search);
+            }
+            initialView = currentRoleView;
+        }
+
+        console.log(`Initializing app. Role: ${currentRoleView}, View: ${initialView}`);
+        switchView(initialView, { updateHistory: false }); // Load initial view
+
+        // Set up accessibility state based on system preferences/defaults
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            body.classList.add('reduced-motion');
+            reducedMotionToggle.setAttribute('aria-pressed', 'true');
+        }
+        // Set up online/offline status
+        function updateOnlineStatus() { /* ... (same as before) ... */ }
+        window.addEventListener('online', () => { updateOnlineStatus(); announce('Connection restored.'); });
+        window.addEventListener('offline', () => { updateOnlineStatus(); announce('Connection lost. Offline mode active.'); });
+        updateOnlineStatus();
+    }
+
+    initializeApp(); // Run initialization
+
+});
+</script>
+
+</body>
+</html>

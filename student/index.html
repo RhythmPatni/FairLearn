@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FairLearn AI - Adaptive Learning Platform</title>
+  <style>
+    /* Base styles from previous response - truncated for brevity */
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1e40af;
+      --secondary: #10b981;
+      --dark: #1f2937;
+      --light: #f3f4f6;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --success: #10b981;
+      --text: #374151;
+      --border: #d1d5db;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f9fafb;
+      color: var(--text);
+      line-height: 1.6;
+      transition: background-color 0.3s, color 0.3s; /* For theme toggles */
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    header {
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 1rem 0;
+      position: sticky; /* Make header sticky */
+      top: 0;
+      z-index: 100; /* Ensure header is above other content */
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary);
+      text-decoration: none; /* Make logo clickable */
+    }
+
+    .logo svg {
+      margin-right: 0.5rem;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 1.5rem;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 500;
+      padding: 0.5rem;
+      border-radius: 0.25rem;
+      transition: background-color 0.3s, color 0.3s;
+      border-bottom: 2px solid transparent; /* For active indicator */
+    }
+
+    nav a:hover {
+      color: var(--primary);
+    }
+    nav a.active {
+      /* background-color: var(--light); */ /* Remove background highlight */
+      color: var(--primary);
+      font-weight: 600; /* Make active link bolder */
+      border-bottom-color: var(--primary); /* Underline active link */
+    }
+
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: none;
+      text-decoration: none; /* For button-like links */
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      color: var(--text); /* Ensure text color */
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--light);
+    }
+
+    .avatar {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      background-color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      cursor: pointer; /* Make avatar interactive */
+    }
+
+    .main-content {
+      padding: 2rem 0;
+    }
+
+    /* Main Content Sections (Views) */
+    .app-view {
+        display: none; /* Hide all views by default */
+    }
+    .app-view.active {
+        display: block; /* Show only the active view */
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1.5rem;
+    }
+
+    .dashboard-header {
+      grid-column: span 12;
+      margin-bottom: 1rem;
+    }
+
+    .dashboard-header h1 {
+      font-size: 1.875rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .dashboard-sidebar {
+      grid-column: span 3;
+    }
+
+    .dashboard-main {
+      grid-column: span 9;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: background-color 0.3s, border 0.3s; /* For theme toggles */
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .progress-container {
+      margin: 1rem 0;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-bar {
+      height: 0.5rem;
+      background-color: var(--light);
+      border-radius: 0.25rem;
+      overflow: hidden;
+    }
+
+    .progress-value {
+      height: 100%;
+      background-color: var(--primary);
+      transition: background-color 0.3s; /* For theme toggles */
+    }
+
+    .courses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .course-card {
+      background-color: white;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s, background-color 0.3s, border 0.3s; /* Added transitions */
+    }
+
+    .reduced-motion .course-card:hover {
+      transform: none; /* Disable hover effect in reduced motion */
+    }
+
+    .course-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .course-image {
+      height: 150px;
+      background-color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      transition: background-color 0.3s; /* For theme toggles */
+    }
+
+    .course-content {
+      padding: 1rem;
+    }
+
+    .course-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .course-description {
+      color: #6b7280;
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .course-progress {
+      margin-top: 0.5rem;
+    }
+
+    .assessment-card {
+      border-left: 4px solid var(--primary);
+      padding-left: 1rem;
+      margin-bottom: 1rem;
+      transition: border-left-color 0.3s; /* For theme toggles */
+    }
+
+    .assessment-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .assessment-title {
+      font-weight: 600;
+    }
+
+    .assessment-meta {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+
+    .fairness-indicator {
+      display: inline-flex; /* Changed to inline-flex */
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      background-color: #dbeafe;
+      color: var(--primary);
+      font-size: 0.75rem;
+      font-weight: 500;
+      transition: background-color 0.3s, color 0.3s; /* For theme toggles */
+    }
+
+    .recommendations {
+      margin-top: 1rem;
+    }
+
+    .recommendation {
+      padding: 0.75rem;
+      border-radius: 0.375rem;
+      background-color: #f3f4f6;
+      margin-bottom: 0.5rem;
+      transition: background-color 0.3s; /* For theme toggles */
+    }
+
+    .recommendation-title {
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    .recommendation-text {
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+
+    .module-content {
+      margin-top: 1rem;
+    }
+
+    .module-nav {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1rem;
+      transition: border-bottom-color 0.3s; /* For theme toggles */
+    }
+
+    .module-nav button {
+      padding: 0.5rem 1rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s;
+      border-bottom: 2px solid transparent;
+      color: var(--text); /* Ensure text color */
+    }
+
+    .module-nav button.active {
+      border-bottom-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none; /* Hidden by default */
+      align-items: center;
+      justify-content: center;
+      z-index: 150; /* Ensure modal is above sticky header */
+    }
+     .modal-backdrop.show {
+        display: flex; /* Show when active */
+     }
+
+    .modal {
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 90%; /* Use percentage for smaller screens */
+      max-height: 90vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+      color: #6b7280;
+      padding: 0.25rem; /* Easier click target */
+      line-height: 1;
+    }
+
+    .modal-body {
+      padding: 1rem;
+      overflow-y: auto; /* Allow body to scroll if needed */
+      flex-grow: 1;
+    }
+
+    .modal-footer {
+      padding: 1rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    /* Accessibility enhancements */
+    .accessibility-controls {
+      padding: 1rem; /* Increased padding */
+      background-color: var(--light);
+      border-radius: 0 0 0.375rem 0.375rem; /* Rounded bottom corners */
+      margin-bottom: 1rem;
+      border: 1px solid var(--border); /* Added border */
+      border-top: none; /* Remove top border as it sits under header */
+      position: absolute; /* Position relative to header */
+      top: 100%; /* Position it right below the header */
+      left: 0;
+      right: 0;
+      max-width: 1200px; /* Match container width */
+      margin: 0 auto; /* Center it */
+      z-index: 90; /* Below header but above content */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, border-color 0.3s; /* For theme toggles */
+    }
+
+    .accessibility-options {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    /* Tab focus styles */
+    :focus-visible { /* Use focus-visible for modern browsers */
+      outline: 3px solid var(--primary);
+      outline-offset: 2px;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3); /* Optional softer focus ring */
+    }
+
+     /* Remove default outline when focus-visible is supported */
+    :focus:not(:focus-visible) {
+      outline: none;
+    }
+
+    /* High contrast mode */
+    .high-contrast {
+      --primary: #0000ff;
+      --primary-dark: #000099; /* Darker blue */
+      --secondary: #00ff00; /* Bright green */
+      --dark: #000000;
+      --light: #dddddd; /* Light gray for backgrounds */
+      --warning: #ffff00; /* Yellow */
+      --danger: #ff0000; /* Red */
+      --success: #00ff00; /* Bright green */
+      --text: #000000;
+      --border: #000000;
+      background-color: #ffffff; /* White background */
+      color: #000000; /* Black text */
+    }
+
+    .high-contrast header {
+        background-color: #ffffff;
+        border-bottom: 2px solid black;
+    }
+    .high-contrast .accessibility-controls {
+        background-color: #ffffff;
+        border: 2px solid black;
+        border-top: none;
+    }
+    .high-contrast .card,
+    .high-contrast .course-card,
+    .high-contrast .modal {
+      background-color: #ffffff;
+      border: 2px solid #000000; /* Thicker border */
+    }
+
+    .high-contrast .btn-primary {
+        background-color: var(--primary);
+        color: white;
+        border: 2px solid black;
+    }
+     .high-contrast .btn-primary:hover {
+        background-color: black;
+        color: white;
+     }
+    .high-contrast .btn-outline {
+        background-color: white;
+        color: black;
+        border: 2px solid black;
+    }
+     .high-contrast .btn-outline:hover {
+        background-color: black;
+        color: white;
+     }
+    .high-contrast nav a {
+        color: black;
+    }
+    .high-contrast nav a.active {
+        color: var(--primary);
+        border-bottom-color: var(--primary);
+    }
+    .high-contrast .fairness-indicator {
+      background-color: white;
+      color: black;
+      border: 1px solid black;
+    }
+    .high-contrast .recommendation {
+        background-color: white;
+        border: 1px dashed black;
+    }
+    .high-contrast .progress-bar {
+        background-color: white;
+        border: 1px solid black;
+    }
+     .high-contrast .progress-value {
+         background-color: black;
+     }
+    .high-contrast .avatar {
+        background-color: black;
+        color: white;
+        border: 1px solid black;
+    }
+     .high-contrast .course-image {
+        background-color: black;
+     }
+    .high-contrast .assessment-card {
+        border-left: 4px solid black;
+    }
+     .high-contrast .module-nav button {
+        color: black;
+     }
+     .high-contrast .module-nav button.active {
+         border-bottom-color: black;
+         color: black;
+     }
+     .high-contrast .assessment-option.selected {
+        border-color: black;
+        background-color: #eeeeee;
+        box-shadow: 0 0 0 2px black;
+     }
+     .high-contrast .assessment-option-icon {
+        background-color: white;
+        border: 1px solid black;
+     }
+    .high-contrast .fairness-alert {
+        background-color: white;
+        border-left: 4px solid var(--danger);
+        border: 1px solid black;
+    }
+    .high-contrast .tabs {
+        border-bottom-color: black;
+    }
+    .high-contrast .tab {
+        color: black;
+    }
+    .high-contrast .tab.active {
+        color: var(--primary);
+        border-bottom-color: var(--primary);
+    }
+
+
+    /* Large text mode */
+    .large-text {
+      font-size: 1.15rem; /* Slightly larger base size */
+    }
+
+    .large-text h1, .large-text .dashboard-header h1 { font-size: 2.2rem; }
+    .large-text h2, .large-text .card-title, .large-text .modal-title { font-size: 1.6rem; }
+    .large-text h3, .large-text .course-title, .large-text .assessment-title, .large-text .recommendation-title { font-size: 1.3rem; }
+    .large-text .btn { font-size: 1.1rem; padding: 0.6rem 1.2rem; }
+    .large-text nav a { font-size: 1.1rem; }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    .reduced-motion *,
+    .reduced-motion ::before,
+    .reduced-motion ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    /* Screen reader notifications */
+    .sr-announce {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+
+    /* Educator view styles */
+    .student-list {
+      list-style: none;
+      padding: 0; /* Remove default padding */
+    }
+
+    .student-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center; /* Align items vertically */
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--border);
+      gap: 1rem; /* Add gap between items */
+      flex-wrap: wrap; /* Allow wrapping on small screens */
+    }
+
+    .student-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-grow: 1; /* Allow info to take space */
+      min-width: 200px; /* Prevent excessive shrinking */
+    }
+
+    .student-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-shrink: 0; /* Prevent meta from shrinking */
+    }
+
+    .fairness-alert {
+      background-color: #fee2e2;
+      border-left: 4px solid var(--danger);
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      transition: background-color 0.3s, border-left-color 0.3s; /* For theme toggles */
+    }
+
+    .fairness-chart {
+      height: 300px;
+      margin: 1rem 0;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f9fafb;
+      font-style: italic;
+      color: #6b7280;
+      transition: background-color 0.3s, border-color 0.3s, color 0.3s; /* For theme toggles */
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1rem;
+      transition: border-bottom-color 0.3s; /* For theme toggles */
+    }
+
+    .tab {
+      padding: 0.75rem 1rem;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-weight: 500;
+      border-bottom: 2px solid transparent;
+      color: var(--text); /* Ensure text color */
+      transition: all 0.3s;
+    }
+
+    .tab.active {
+      border-bottom-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .assessment-options {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .assessment-option {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: border-color 0.3s, background-color 0.3s;
+    }
+
+    .assessment-option.selected {
+      border-color: var(--primary);
+      background-color: #eff6ff;
+      box-shadow: 0 0 0 2px var(--primary); /* Add ring for selection */
+    }
+
+     .assessment-option:focus-visible { /* Style focus for keyboard nav */
+        outline-offset: 1px;
+     }
+
+    .assessment-option-icon {
+      width: 2.5rem; /* Slightly larger */
+      height: 2.5rem; /* Slightly larger */
+      background-color: var(--light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0.375rem;
+      flex-shrink: 0; /* Prevent icon shrinking */
+      transition: background-color 0.3s; /* For theme toggles */
+    }
+
+    /* Offline mode indicator */
+    .offline-indicator {
+      background-color: var(--warning);
+      color: var(--dark); /* Better contrast */
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 600; /* Bolder */
+      margin-left: 0.5rem;
+      display: none; /* Hidden by default */
+      border: 1px solid var(--dark); /* Add border */
+    }
+    body.offline .offline-indicator {
+        display: inline-block; /* Show when offline */
+    }
+
+    /* Skip to content link */
+    .skip-to-content {
+      position: absolute;
+      top: -100px; /* Hide off-screen */
+      left: 10px;
+      background: var(--primary);
+      color: white;
+      padding: 10px 15px;
+      z-index: 1000;
+      transition: top 0.3s ease-in-out;
+      border-radius: 0 0 5px 5px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .skip-to-content:focus {
+      top: 0; /* Bring into view on focus */
+    }
+
+    /* Responsive styles */
+    @media (max-width: 992px) { /* Adjust breakpoint */
+      .dashboard {
+        grid-template-columns: 1fr; /* Stack columns */
+      }
+
+      .dashboard-sidebar,
+      .dashboard-main {
+        grid-column: span 1;
+      }
+      .accessibility-controls {
+         position: static; /* Revert position on smaller screens */
+         margin-top: 1rem;
+         border-radius: 0.375rem;
+         border: 1px solid var(--border);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch; /* Stretch items full width */
+      }
+
+      nav ul {
+        gap: 0.5rem; /* Reduce gap */
+        flex-wrap: wrap; /* Allow nav items to wrap */
+        justify-content: center; /* Center nav items */
+        padding-top: 0.5rem;
+      }
+      .user-menu {
+        width: 100%; /* Make user menu full width */
+        justify-content: space-between; /* Space out items */
+        padding-top: 0.5rem;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <a href="#main-content" class="skip-to-content">Skip to main content</a>
+
+  <header>
+    <div class="container">
+      <div class="navbar">
+        <a href="#" class="logo" id="logo-link" data-view="student-view"> <!-- Added data-view -->
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12 4.75L19.25 9L12 13.25L4.75 9L12 4.75Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M4.75 14L12 18.25L19.25 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          FairLearn AI
+        </a>
+        <nav aria-label="Main navigation">
+          <ul role="menubar">
+            <!-- Updated nav links with data-view attributes -->
+            <li role="none"><a href="#" role="menuitem" class="nav-link active" data-view="student-view">Dashboard</a></li>
+            <li role="none"><a href="#" role="menuitem" class="nav-link" data-view="courses-view">My Courses</a></li>
+            <li role="none"><a href="#" role="menuitem" class="nav-link" data-view="assessment-view">Assessments</a></li>
+            <li role="none"><a href="#" role="menuitem" class="nav-link" data-view="progress-view">Progress</a></li>
+            <li role="none"><a href="#" role="menuitem" class="nav-link" data-view="help-view">Help</a></li>
+          </ul>
+        </nav>
+        <div class="user-menu">
+          <button id="accessibility-toggle" class="btn btn-outline" aria-label="Accessibility options" aria-expanded="false" aria-controls="accessibility-panel">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M10 8L8 12H16L14 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M12 16C13.1046 16 14 15.1046 14 14C14 12.8954 13.1046 12 12 12C10.8954 12 10 12.8954 10 14C10 15.1046 10.8954 16 12 16Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+             <span class="sr-only">Toggle Accessibility Options</span>
+             <span class="offline-indicator" aria-hidden="true">Offline</span>
+          </button>
+          <button id="view-toggle" class="btn btn-outline" aria-label="Switch to Educator View">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M17 21V3M7 21V3M17 3H7C5.34315 3 4 4.34315 4 6V18C4 19.6569 5.34315 21 7 21H17C18.6569 21 20 19.6569 20 18V6C20 4.34315 18.6569 3 17 3Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+             <span class="view-toggle-text">Educator View</span>
+          </button>
+          <div class="avatar" aria-label="User profile menu" tabindex="0" role="button" aria-expanded="false">JS</div>
+        </div>
+      </div>
+    </div>
+     <!-- Accessibility Panel moved outside container, but positioned absolutely -->
+     <div id="accessibility-panel" class="accessibility-controls" style="display: none;" role="region" aria-labelledby="accessibility-heading">
+       <h2 id="accessibility-heading" class="sr-only">Accessibility Options</h2>
+       <div class="accessibility-options">
+         <button class="btn btn-outline" id="high-contrast-toggle" aria-pressed="false">Toggle High Contrast</button>
+         <button class="btn btn-outline" id="large-text-toggle" aria-pressed="false">Toggle Large Text</button>
+         <button class="btn btn-outline" id="reduced-motion-toggle" aria-pressed="false">Toggle Reduced Motion</button>
+         <button class="btn btn-outline" id="offline-mode-toggle" aria-pressed="false">Toggle Offline Mode</button>
+       </div>
+     </div>
+  </header>
+
+  <main class="main-content" id="main-content">
+    <div class="container">
+
+      <div id="app-content">
+        <!-- Student Dashboard View -->
+        <!-- Assign app-view class and ensure ID matches nav data-view -->
+        <div id="student-view" class="app-view active">
+          <div class="dashboard">
+            <div class="dashboard-header">
+              <h1>Welcome back, Jamie</h1>
+              <p>Continue your learning journey with personalized recommendations.</p>
+            </div>
+
+            <div class="dashboard-sidebar">
+              <div class="card" role="region" aria-labelledby="progress-heading">
+                <div class="card-header">
+                  <h2 id="progress-heading" class="card-title">My Progress</h2>
+                </div>
+                <div class="progress-container">
+                  <div class="progress-header">
+                    <span>Overall Progress</span>
+                    <span>68%</span>
+                  </div>
+                  <div class="progress-bar" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" aria-label="Overall progress: 68 percent">
+                    <div class="progress-value" style="width: 68%;"></div>
+                  </div>
+                </div>
+                <div class="progress-container">
+                  <div class="progress-header">
+                    <span>Current Module</span>
+                    <span>75%</span>
+                  </div>
+                  <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" aria-label="Current module progress: 75 percent">
+                    <div class="progress-value" style="width: 75%;"></div>
+                  </div>
+                </div>
+                <div class="progress-container">
+                  <div class="progress-header">
+                    <span>Weekly Goals</span>
+                    <span>50%</span>
+                  </div>
+                  <div class="progress-bar" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" aria-label="Weekly goals progress: 50 percent">
+                    <div class="progress-value" style="width: 50%;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card" role="region" aria-labelledby="upcoming-heading">
+                <div class="card-header">
+                  <h2 id="upcoming-heading" class="card-title">Upcoming Assessments</h2>
+                </div>
+                <div class="assessment-card">
+                  <div class="assessment-header">
+                    <div class="assessment-title">Algebra Quiz</div>
+                    <div class="assessment-date">Due: Apr 25</div>
+                  </div>
+                  <div class="assessment-meta">
+                    <span>10 questions</span>
+                    <span>20 minutes</span>
+                  </div>
+                  <div class="fairness-indicator">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                       <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                       <path d="M12 16V12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                       <path d="M12 8H12.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                    Multiple response options available
+                  </div>
+                   <button class="btn btn-outline btn-sm show-assessment-details" data-assessment="algebra-quiz" style="margin-top: 0.5rem; padding: 0.25rem 0.5rem; font-size: 0.75rem;">View Quiz Details</button>
+                </div>
+                <div class="assessment-card">
+                  <div class="assessment-header">
+                    <div class="assessment-title">Literature Project</div>
+                    <div class="assessment-date">Due: Apr 30</div>
+                  </div>
+                  <div class="assessment-meta">
+                    <span>Essay or Presentation</span>
+                  </div>
+                  <div class="fairness-indicator">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                       <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                       <path d="M12 16V12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                       <path d="M12 8H12.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                    Multiple format options
+                  </div>
+                   <button class="btn btn-outline btn-sm show-assessment-details" data-assessment="literature-project" style="margin-top: 0.5rem; padding: 0.25rem 0.5rem; font-size: 0.75rem;">View Project Details</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="dashboard-main">
+              <div class="card" role="region" aria-labelledby="learning-heading">
+                <div class="card-header">
+                  <h2 id="learning-heading" class="card-title">Continue Learning</h2>
+                </div>
+                <div class="courses-grid">
+                  <article class="course-card" aria-labelledby="course-title-algebra">
+                    <div class="course-image">
+                      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M2 9.5H12" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M4 14.5H8" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M13 14.5H17" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M22 9.5H17" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M14.5 4V9.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M6 4V9.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M6 14.5V20" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M14.5 14.5V20" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </div>
+                    <div class="course-content">
+                      <h3 id="course-title-algebra" class="course-title">Algebra Fundamentals</h3>
+                      <p class="course-description">Master the basics of algebraic expressions and equations.</p>
+                      <div class="progress-container course-progress">
+                        <div class="progress-header">
+                          <span>Progress</span>
+                          <span>75%</span>
+                        </div>
+                        <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" aria-label="Algebra Fundamentals progress: 75 percent">
+                          <div class="progress-value" style="width: 75%;"></div>
+                        </div>
+                      </div>
+                      <button class="btn btn-primary continue-course" style="width: 100%; margin-top: 0.5rem;" data-course="algebra" data-target-view="module-view">Continue Algebra</button>
+                    </div>
+                  </article>
+
+                  <article class="course-card" aria-labelledby="course-title-literature">
+                    <div class="course-image" style="background-color: #7c3aed;">
+                      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M8 14L10.5 16.5L16 11" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </div>
+                    <div class="course-content">
+                      <h3 id="course-title-literature" class="course-title">World Literature</h3>
+                      <p class="course-description">Explore classic and contemporary literary works from around the world.</p>
+                      <div class="progress-container course-progress">
+                        <div class="progress-header">
+                          <span>Progress</span>
+                          <span>42%</span>
+                        </div>
+                        <div class="progress-bar" role="progressbar" aria-valuenow="42" aria-valuemin="0" aria-valuemax="100" aria-label="World Literature progress: 42 percent">
+                          <div class="progress-value" style="width: 42%;"></div>
+                        </div>
+                      </div>
+                      <button class="btn btn-primary continue-course" style="width: 100%; margin-top: 0.5rem;" data-course="literature" data-target-view="module-view">Continue Literature</button>
+                    </div>
+                  </article>
+
+                  <article class="course-card" aria-labelledby="course-title-chemistry">
+                    <div class="course-image" style="background-color: #10b981;">
+                      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M19.5 5.5L18 3.5L16.5 5.5L15 3.5L13.5 5.5L12 3.5L10.5 5.5L9 3.5L7.5 5.5L6 3.5L4.5 5.5L3 3.5V20.5L4.5 18.5L6 20.5L7.5 18.5L9 20.5L10.5 18.5L12 20.5L13.5 18.5L15 20.5L16.5 18.5L18 20.5L19.5 18.5L21 20.5V3.5L19.5 5.5Z" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M7 9H17" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M7 13H17" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M7 17H12" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                    </div>
+                    <div class="course-content">
+                      <h3 id="course-title-chemistry" class="course-title">Chemistry Basics</h3>
+                      <p class="course-description">Learn fundamental principles of chemistry through interactive experiments.</p>
+                      <div class="progress-container course-progress">
+                        <div class="progress-header">
+                          <span>Progress</span>
+                          <span>10%</span>
+                        </div>
+                        <div class="progress-bar" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" aria-label="Chemistry Basics progress: 10 percent">
+                          <div class="progress-value" style="width: 10%;"></div>
+                        </div>
+                      </div>
+                      <button class="btn btn-primary continue-course" style="width: 100%; margin-top: 0.5rem;" data-course="chemistry" data-target-view="module-view">Continue Chemistry</button>
+                    </div>
+                  </article>
+                </div>
+              </div>
+
+              <div class="card" role="region" aria-labelledby="recommendations-heading">
+                <div class="card-header">
+                  <h2 id="recommendations-heading" class="card-title">Personalized Recommendations</h2>
+                </div>
+                <div class="recommendations">
+                  <div class="recommendation">
+                    <h3 class="recommendation-title">Practice algebraic equations with visual models</h3>
+                    <p class="recommendation-text">Based on your learning style preferences and recent quiz results, we've identified visual models as an effective approach for strengthening your algebraic skills.</p>
+                    <div class="fairness-indicator">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                         <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                         <path d="M12 16V12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                         <path d="M12 8H12.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                      Learning style adapted
+                    </div>
+                     <button class="btn btn-secondary btn-sm" style="margin-top: 0.5rem; padding: 0.25rem 0.5rem; font-size: 0.75rem;">Start Practice</button>
+                  </div>
+                  <div class="recommendation">
+                    <h3 class="recommendation-title">Explore poetry analysis techniques</h3>
+                    <p class="recommendation-text">Your excellent performance in narrative structure could be complemented by strengthening poetry analysis skills for your upcoming literature assessment.</p>
+                    <div class="fairness-indicator">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                         <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                         <path d="M12 16V12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                         <path d="M12 8H12.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
+                      Based on demonstrated strengths
+                    </div>
+                     <button class="btn btn-secondary btn-sm" style="margin-top: 0.5rem; padding: 0.25rem 0.5rem; font-size: 0.75rem;">Explore Techniques</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- My Courses View -->
+        <div id="courses-view" class="app-view">
+             <div class="dashboard-header">
+                 <h1>My Courses</h1>
+                 <p>Manage and access your enrolled courses.</p>
+                 <button class="btn btn-outline back-to-dashboard" data-target-view="student-view" style="margin-top: 0.5rem;">Back to Dashboard</button>
+             </div>
+             <div class="card">
+                 <h2 class="card-title">Enrolled Courses</h2>
+                 <div class="courses-grid">
+                     <!-- Example: Replicate course cards from dashboard or show different info -->
+                    <article class="course-card" aria-labelledby="mycourse-title-algebra">
+                        <div class="course-image"> /* Algebra Icon */ </div>
+                        <div class="course-content">
+                        <h3 id="mycourse-title-algebra" class="course-title">Algebra Fundamentals</h3>
+                        <p class="course-description">Master the basics of algebraic expressions and equations.</p>
+                        <button class="btn btn-primary continue-course" style="width: 100%; margin-top: 0.5rem;" data-course="algebra" data-target-view="module-view">Go to Course</button>
+                        </div>
+                    </article>
+                    <article class="course-card" aria-labelledby="mycourse-title-literature">
+                        <div class="course-image" style="background-color: #7c3aed;"> /* Literature Icon */ </div>
+                        <div class="course-content">
+                        <h3 id="mycourse-title-literature" class="course-title">World Literature</h3>
+                        <p class="course-description">Explore classic and contemporary literary works from around the world.</p>
+                         <button class="btn btn-primary continue-course" style="width: 100%; margin-top: 0.5rem;" data-course="literature" data-target-view="module-view">Go to Course</button>
+                        </div>
+                    </article>
+                     <article class="course-card" aria-labelledby="mycourse-title-chemistry">
+                        <div class="course-image" style="background-color: #10b981;"> /* Chemistry Icon */ </div>
+                        <div class="course-content">
+                        <h3 id="mycourse-title-chemistry" class="course-title">Chemistry Basics</h3>
+                        <p class="course-description">Learn fundamental principles of chemistry through interactive experiments.</p>
+                        <button class="btn btn-primary continue-course" style="width: 100%; margin-top: 0.5rem;" data-course="chemistry" data-target-view="module-view">Go to Course</button>
+                        </div>
+                    </article>
+                    </div>
+             </div>
+             <div class="card">
+                <h2 class="card-title">Available Courses</h2>
+                <p>Browse other courses you might be interested in.</p>
+                {/* Placeholder for course catalog */}
+            </div>
+         </div>
+
+        <!-- Assessment View (Main Page) -->
+        <div id="assessment-view" class="app-view">
+           <div class="dashboard">
+             <div class="dashboard-header">
+               <h1>Assessments</h1>
+               <p>View upcoming, ongoing, and completed assessments.</p>
+                <button class="btn btn-outline back-to-dashboard" data-target-view="student-view" style="margin-top: 0.5rem;">Back to Dashboard</button>
+             </div>
+
+             <div class="dashboard-main" style="grid-column: span 12;"> {/* Make main content full width */}
+               <div class="card" role="region" aria-labelledby="upcoming-assessments-heading">
+                 <div class="card-header">
+                   <h2 id="upcoming-assessments-heading" class="card-title">Upcoming / Active Assessments</h2>
+                 </div>
+                 <!-- Replicate Upcoming Assessments from Dashboard Sidebar or show more detail -->
+                 <div class="assessment-card">
+                  <div class="assessment-header">
+                    <div class="assessment-title">Algebra Quiz</div>
+                    <div class="assessment-date">Due: Apr 25</div>
+                  </div>
+                  <div class="assessment-meta"><span>10 questions</span> • <span>20 minutes</span></div>
+                  <div class="fairness-indicator">Multiple response options available</div>
+                  <button class="btn btn-primary btn-sm show-assessment-options" data-assessment="algebra-module-3" style="margin-top: 0.5rem; padding: 0.25rem 0.5rem; font-size: 0.75rem;">Start / View Options</button>
+                 </div>
+                 <div class="assessment-card">
+                  <div class="assessment-header">
+                    <div class="assessment-title">Literature Project</div>
+                    <div class="assessment-date">Due: Apr 30</div>
+                  </div>
+                  <div class="assessment-meta"><span>Essay or Presentation</span></div>
+                  <div class="fairness-indicator">Multiple format options</div>
+                   <button class="btn btn-primary btn-sm show-assessment-options" data-assessment="literature-module-2" style="margin-top: 0.5rem; padding: 0.25rem 0.5rem; font-size: 0.75rem;">Start / View Options</button>
+                 </div>
+               </div>
+
+               <div class="card" role="region" aria-labelledby="completed-assessments-heading">
+                 <div class="card-header">
+                   <h2 id="completed-assessments-heading" class="card-title">Completed Assessments</h2>
+                 </div>
+                 {/* Placeholder for list of past assessments and results */}
+                 <p>No completed assessments yet.</p>
+               </div>
+
+               <div class="card" role="region" aria-labelledby="assessment-options-info-heading">
+                 <div class="card-header">
+                   <h2 id="assessment-options-info-heading" class="card-title">About Assessment Options</h2>
+                 </div>
+                 <p>FairLearn AI often provides multiple ways to demonstrate your knowledge. Choose the format that best suits your learning style. All options cover the same learning objectives and are weighted equally.</p>
+                 <button class="btn btn-outline" id="learn-more-assessments-main" style="margin-top: 1rem;">Learn More About Assessment Fairness</button>
+               </div>
+             </div>
+           </div>
+         </div>
+
+         <!-- Assessment Options Sub-View (Still needs logic to show/hide based on button clicks) -->
+         <div id="assessment-options-subview" class="app-view">
+             <div class="dashboard">
+                 <div class="dashboard-header">
+                     <h1 id="assessment-options-title">Assessment Options: Algebra Module 3</h1>
+                     <p>Choose the assessment format that best demonstrates your understanding.</p>
+                     <button class="btn btn-outline back-to-assessments" data-target-view="assessment-view" style="margin-top: 0.5rem;">Back to Assessments List</button>
+                 </div>
+                 <div class="dashboard-main" style="grid-column: span 12;">
+                     <div class="card" role="region" aria-labelledby="assessment-options-heading-sub">
+                        <div class="card-header"><h2 id="assessment-options-heading-sub" class="card-title">Available Options</h2></div>
+                        <p style="margin-bottom: 1rem;">Select the assessment format. Recommendations are based on your learning profile.</p>
+                        <div class="assessment-options" role="radiogroup" aria-labelledby="assessment-options-heading-sub">
+                            {/* Assessment options copied from original assessment-view */}
+                            <div class="assessment-option" role="radio" tabindex="0" aria-checked="false" data-option="quiz"> /* Quiz Option */ </div>
+                            <div class="assessment-option selected" role="radio" tabindex="0" aria-checked="true" data-option="visual"> /* Visual Option */ </div>
+                            <div class="assessment-option" role="radio" tabindex="0" aria-checked="false" data-option="application"> /* Application Option */ </div>
+                            <div class="assessment-option" role="radio" tabindex="0" aria-checked="false" data-option="verbal"> /* Verbal Option */ </div>
+                        </div>
+                        <div style="margin-top: 1.5rem;">
+                            <button class="btn btn-primary" id="confirm-assessment">Confirm Selection & Start</button>
+                        </div>
+                    </div>
+                 </div>
+             </div>
+         </div>
+
+
+        <!-- Progress View -->
+         <div id="progress-view" class="app-view">
+             <div class="dashboard-header">
+                 <h1>My Progress</h1>
+                 <p>Track your learning journey across all courses and skills.</p>
+                 <button class="btn btn-outline back-to-dashboard" data-target-view="student-view" style="margin-top: 0.5rem;">Back to Dashboard</button>
+            </div>
+             <div class="card">
+                <h2 class="card-title">Overall Progress Snapshot</h2>
+                 <div class="progress-container"> /* Overall Progress Bar */ </div>
+             </div>
+             <div class="card">
+                 <h2 class="card-title">Progress by Course</h2>
+                 {/* Placeholder: Add detailed progress for each course */}
+                 <p>Detailed course progress report...</p>
+             </div>
+             <div class="card">
+                 <h2 class="card-title">Skills Mastery</h2>
+                  {/* Placeholder: Add skills tracking visualization */}
+                 <p>Skills mastery chart...</p>
+            </div>
+         </div>
+
+        <!-- Help View -->
+         <div id="help-view" class="app-view">
+            <div class="dashboard-header">
+                <h1>Help & Support</h1>
+                <p>Find answers to common questions and get assistance.</p>
+                <button class="btn btn-outline back-to-dashboard" data-target-view="student-view" style="margin-top: 0.5rem;">Back to Dashboard</button>
+            </div>
+             <div class="card">
+                <h2 class="card-title">Frequently Asked Questions</h2>
+                 {/* Placeholder for FAQs */}
+                <p>FAQ content...</p>
+             </div>
+             <div class="card">
+                <h2 class="card-title">Tutorials & Guides</h2>
+                 {/* Placeholder for tutorials */}
+                 <p>Platform tutorial videos/guides...</p>
+            </div>
+             <div class="card">
+                <h2 class="card-title">Contact Support</h2>
+                 {/* Placeholder for contact form/info */}
+                 <p>Contact information or form...</p>
+            </div>
+         </div>
+
+
+        <!-- Learning Module View (Sub-view, needs logic to show/hide) -->
+        <div id="module-view" class="app-view">
+          <div class="dashboard">
+            <div class="dashboard-header">
+              <h1 id="module-title">Algebra Fundamentals: Linear Equations</h1>
+              <p id="module-subtitle">Module 3 of 8 - Learning different approaches to linear equations</p>
+               <button class="btn btn-outline back-to-dashboard" data-target-view="student-view" style="margin-top: 0.5rem;">Back to Dashboard</button>
+               <button class="btn btn-outline back-to-courses" data-target-view="courses-view" style="margin-top: 0.5rem; margin-left: 0.5rem;">Back to My Courses</button>
+            </div>
+
+            <div class="dashboard-sidebar">
+              <div class="card" role="region" aria-labelledby="module-progress-heading">
+                <div class="card-header">
+                  <h2 id="module-progress-heading" class="card-title">Module Progress</h2>
+                </div>
+                 <div class="progress-container"> /* Section Progress */ </div>
+                 <div class="progress-container"> /* Overall Module Progress */ </div>
+                 <div style="margin-top: 1rem;"> /* Module Sections List */ </div>
+              </div>
+
+              <div class="card" role="region" aria-labelledby="prefs-heading">
+                <div class="card-header">
+                  <h2 id="prefs-heading" class="card-title">Learning Preferences</h2>
+                </div>
+                 <div style="margin-bottom: 0.5rem;"> /* Content Style Select */ </div>
+                 <div style="margin-bottom: 0.5rem;"> /* Difficulty Select */ </div>
+                 <div style="margin-bottom: 0.5rem;"> /* Pace Select */ </div>
+                 <button class="btn btn-primary" id="apply-preferences" style="width: 100%; margin-top: 0.5rem;">Apply Preferences</button>
+              </div>
+            </div>
+
+            <div class="dashboard-main">
+              <div class="card" role="region" aria-labelledby="module-section-heading">
+                <div class="card-header">
+                  <h2 id="module-section-heading" class="card-title">3.2 Solving Linear Equations by Substitution</h2>
+                </div>
+
+                <div class="module-nav" role="tablist" aria-label="Module Sections Navigation">
+                  <button role="tab" aria-selected="true" aria-controls="tabpanel-content" id="tab-content" class="active">Content</button>
+                  <button role="tab" aria-selected="false" aria-controls="tabpanel-practice" id="tab-practice" tabindex="-1">Practice</button>
+                  <button role="tab" aria-selected="false" aria-controls="tabpanel-discussion" id="tab-discussion" tabindex="-1">Discussion</button>
+                  <button role="tab" aria-selected="false" aria-controls="tabpanel-resources" id="tab-resources" tabindex="-1">Resources</button>
+                </div>
+
+                <div id="tabpanel-content" class="module-content" role="tabpanel" aria-labelledby="tab-content">
+                   {/* Content as before: Key Concept, Example, Solutions, Check Understanding */}
+                   <p style="margin-bottom: 1rem;">In this section, we explore the substitution method...</p>
+                   <div style="background-color: #f3f4f6; padding: 1rem; border-radius: 0.375rem; margin-bottom: 1rem;"> /* Key Concept */ </div>
+                   <div style="margin-bottom: 1rem;"> /* Example Problem */ </div>
+                   <button class="btn btn-outline" style="margin: 0.5rem 0;" id="show-visual" aria-expanded="false" aria-controls="solution-visual">Show Visual Solution</button>
+                   <button class="btn btn-outline" style="margin: 0.5rem 0 0.5rem 0.5rem;" id="show-algebraic" aria-expanded="false" aria-controls="solution-algebraic">Show Algebraic Solution</button>
+                   <div id="solution-visual" style="display: none;"> /* Visual Solution Content */ </div>
+                   <div id="solution-algebraic" style="display: none;"> /* Algebraic Solution Content */ </div>
+                   <div style="margin-top: 1.5rem;"> /* Check Your Understanding */ </div>
+                   <button class="btn btn-primary" id="try-problem">Try This Problem</button>
+                   <button class="btn btn-outline" style="margin-left: 0.5rem;" id="hint-button" aria-expanded="false" aria-controls="hint-content">Get a Hint</button>
+                   <div id="hint-content" style="display: none;"> /* Hint Content */ </div>
+                   <div style="margin-top: 2rem; display: flex; justify-content: space-between;">
+                    <button class="btn btn-outline" id="prev-section">Previous Section</button>
+                    <button class="btn btn-primary" id="next-section">Next Section</button>
+                  </div>
+                </div>
+                 {/* Placeholder Tab Panels for Practice, Discussion, Resources */}
+                 <div id="tabpanel-practice" class="module-content" role="tabpanel" aria-labelledby="tab-practice" hidden> /* Practice Content */ </div>
+                 <div id="tabpanel-discussion" class="module-content" role="tabpanel" aria-labelledby="tab-discussion" hidden> /* Discussion Content */ </div>
+                 <div id="tabpanel-resources" class="module-content" role="tabpanel" aria-labelledby="tab-resources" hidden> /* Resources Content */ </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Educator View (Separate Main View) -->
+        <div id="educator-view" class="app-view">
+           <div class="dashboard">
+             <div class="dashboard-header">
+               <h1>Educator Dashboard</h1>
+               <p>Monitor student progress and ensure fair assessment across diverse learning styles.</p>
+               {/* Note: No "Back to Dashboard" needed here as this IS the dashboard */}
+             </div>
+
+             <div class="tabs" role="tablist" aria-label="Educator Sections">
+               <button class="tab active" role="tab" aria-selected="true" aria-controls="panel-class-overview" id="tab-class-overview">Class Overview</button>
+               <button class="tab" role="tab" aria-selected="false" aria-controls="panel-assessment-analysis" id="tab-assessment-analysis" tabindex="-1">Assessment Analysis</button>
+               <button class="tab" role="tab" aria-selected="false" aria-controls="panel-content-management" id="tab-content-management" tabindex="-1">Content Management</button>
+               <button class="tab" role="tab" aria-selected="false" aria-controls="panel-fairness-monitoring" id="tab-fairness-monitoring" tabindex="-1">Fairness Monitoring</button>
+             </div>
+
+             <div class="dashboard-main" style="grid-column: span 12;"> {/* Full width */}
+               <div id="panel-class-overview" role="tabpanel" aria-labelledby="tab-class-overview">
+                  <div class="card">
+                    <div class="card-header">
+                      <h2 class="card-title">Class Progress Overview</h2>
+                      <button class="btn btn-outline">Export Data</button>
+                    </div>
+                    <div class="fairness-alert" role="alert"> /* Fairness Alert Content */ </div>
+                    <div class="fairness-chart" aria-label="Chart showing class performance visualization with fairness indicators"> [Class performance visualization placeholder] </div>
+                    <h3 style="margin: 1rem 0 0.5rem;">Student List</h3>
+                    <ul class="student-list"> /* Student List Items */ </ul>
+                  </div>
+               </div>
+               <div id="panel-assessment-analysis" role="tabpanel" aria-labelledby="tab-assessment-analysis" hidden> /* Assessment Analysis Content */ </div>
+               <div id="panel-content-management" role="tabpanel" aria-labelledby="tab-content-management" hidden> /* Content Management Content */ </div>
+               <div id="panel-fairness-monitoring" role="tabpanel" aria-labelledby="tab-fairness-monitoring" hidden> /* Fairness Monitoring Content */ </div>
+             </div>
+           </div>
+         </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Screen reader announcement region -->
+  <div class="sr-announce" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Simple Modal Example (Initially hidden) -->
+   <div class="modal-backdrop" id="example-modal-backdrop">
+     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title-example">
+       <div class="modal-header">
+         <h2 class="modal-title" id="modal-title-example">Modal Title</h2>
+         <button class="modal-close" aria-label="Close modal">&times;</button>
+       </div>
+       <div class="modal-body">
+         <p>This is the content of the modal. More information or interactive elements can go here.</p>
+       </div>
+       <div class="modal-footer">
+         <button class="btn btn-outline modal-close">Cancel</button>
+         <button class="btn btn-primary" id="modal-confirm">Confirm Action</button>
+       </div>
+     </div>
+   </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const body = document.body;
+    const accessibilityPanel = document.getElementById('accessibility-panel');
+    const accessibilityToggle = document.getElementById('accessibility-toggle');
+    const highContrastToggle = document.getElementById('high-contrast-toggle');
+    const largeTextToggle = document.getElementById('large-text-toggle');
+    const reducedMotionToggle = document.getElementById('reduced-motion-toggle');
+    const offlineModeToggle = document.getElementById('offline-mode-toggle');
+    const viewToggle = document.getElementById('view-toggle');
+    const viewToggleText = viewToggle.querySelector('.view-toggle-text');
+    const appContent = document.getElementById('app-content');
+    const allAppViews = appContent.querySelectorAll('.app-view'); // Select all top-level views
+    const navLinks = document.querySelectorAll('nav .nav-link'); // More specific selector
+    const logoLink = document.getElementById('logo-link');
+    const backToDashboardButtons = document.querySelectorAll('.back-to-dashboard');
+    const backToCoursesButtons = document.querySelectorAll('.back-to-courses');
+    const backToAssessmentsButtons = document.querySelectorAll('.back-to-assessments');
+    const srAnnounce = document.querySelector('.sr-announce');
+    const modalBackdrop = document.getElementById('example-modal-backdrop');
+    const modalCloseButtons = document.querySelectorAll('.modal-close');
+    const continueCourseButtons = document.querySelectorAll('.continue-course');
+    const showAssessmentDetailsButtons = document.querySelectorAll('.show-assessment-details');
+    const showAssessmentOptionsButtons = document.querySelectorAll('.show-assessment-options');
+
+
+    let currentRoleView = 'student-view'; // Tracks 'student-view' or 'educator-view'
+    let currentSubView = 'student-view'; // Tracks the specific active view ID
+
+    // --- Utility Functions ---
+    function announce(message) {
+        // Debounce announcements slightly to prevent overwhelming screen readers
+        clearTimeout(announce.timer);
+        announce.timer = setTimeout(() => {
+            srAnnounce.textContent = message;
+            // Optionally clear after a longer delay if needed
+            // setTimeout(() => { srAnnounce.textContent = ''; }, 1500);
+        }, 150); // 150ms delay
+    }
+
+     // Main function to switch visible content sections (views)
+     function switchView(targetViewId, options = { updateHistory: true }) {
+         console.log(`Switching view to: ${targetViewId}`);
+         // Hide all app views first
+         allAppViews.forEach(view => view.classList.remove('active'));
+
+         // Show the target view
+         const targetView = document.getElementById(targetViewId);
+         if (targetView) {
+             targetView.classList.add('active');
+             currentSubView = targetViewId; // Update the currently active sub-view
+
+             // Update nav link active state ONLY for top-level nav items
+             navLinks.forEach(link => {
+                 link.classList.toggle('active', link.getAttribute('data-view') === targetViewId);
+             });
+
+             // Focus management: Move focus to the main heading or container
+             const focusTarget = targetView.querySelector('h1') || targetView;
+             focusTarget.setAttribute('tabindex', '-1'); // Make it focusable
+             focusTarget.focus({ preventScroll: true }); // Focus without scrolling if possible
+             window.scrollTo(0, 0); // Scroll to top of page after view switch
+
+             // Update browser history/URL hash (optional, good for SPA feel)
+             if (options.updateHistory && history.pushState) {
+                 try {
+                    // Only update hash for primary views linked from nav, not sub-views like module
+                     if (Array.from(navLinks).some(link => link.getAttribute('data-view') === targetViewId) || targetViewId === 'educator-view') {
+                         history.pushState({ view: targetViewId }, '', `#${targetViewId}`);
+                     } else {
+                         // For sub-views, maybe just update state without changing visible hash
+                         history.pushState({ view: targetViewId }, '', window.location.pathname + window.location.search); // Keep current hash or remove it
+                     }
+                 } catch (e) {
+                     console.warn("Could not update history state:", e);
+                 }
+             }
+
+             announce(`Navigated to ${targetView.querySelector('h1')?.textContent || targetViewId.replace('-',' ')} view.`);
+         } else {
+             console.error(`View with ID ${targetViewId} not found.`);
+             // Fallback to the current role's dashboard if target not found
+             switchView(currentRoleView, { updateHistory: false });
+         }
+     }
+
+     // Function to handle back/forward browser navigation
+     window.addEventListener('popstate', (event) => {
+         console.log("Popstate event:", event.state);
+         if (event.state && event.state.view) {
+             switchView(event.state.view, { updateHistory: false }); // Don't push state again
+         } else {
+             // If no state, try to parse hash or default to dashboard
+             const hashView = window.location.hash.substring(1);
+             if (document.getElementById(hashView)) {
+                 switchView(hashView, { updateHistory: false });
+             } else {
+                  switchView(currentRoleView, { updateHistory: false }); // Fallback to role dashboard
+             }
+         }
+     });
+
+
+    function toggleModal(show, title = "Modal", content = "<p>Modal content goes here.</p>") {
+        const modalTitleEl = document.getElementById('modal-title-example');
+        const modalBodyEl = modalBackdrop.querySelector('.modal-body');
+
+        if (modalTitleEl) modalTitleEl.textContent = title;
+        if (modalBodyEl) modalBodyEl.innerHTML = content; // Use innerHTML carefully
+
+        if (show) {
+            modalBackdrop.style.display = 'flex';
+            modalBackdrop.classList.add('show');
+            modalBackdrop.querySelector('.modal-close')?.focus();
+            announce(`Modal opened: ${title}`);
+        } else {
+             modalBackdrop.classList.remove('show');
+             setTimeout(() => {
+                if (!modalBackdrop.classList.contains('show')) {
+                    modalBackdrop.style.display = 'none';
+                }
+             }, 300);
+             announce("Modal closed");
+             // Consider returning focus to the element that opened the modal
+        }
+    }
+
+    // --- Accessibility Controls ---
+    accessibilityToggle.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent potential clicks closing it immediately if panel overlaps
+        const isExpanded = accessibilityToggle.getAttribute('aria-expanded') === 'true';
+        accessibilityToggle.setAttribute('aria-expanded', !isExpanded);
+        accessibilityPanel.style.display = isExpanded ? 'none' : 'block';
+        announce(`Accessibility options ${isExpanded ? 'hidden' : 'shown'}`);
+        if (!isExpanded) {
+            accessibilityPanel.querySelector('button')?.focus();
+        }
+    });
+     // Close accessibility panel if clicking outside of it
+     document.addEventListener('click', (e) => {
+         if (!accessibilityPanel.contains(e.target) && !accessibilityToggle.contains(e.target) && accessibilityToggle.getAttribute('aria-expanded') === 'true') {
+             accessibilityToggle.setAttribute('aria-expanded', 'false');
+             accessibilityPanel.style.display = 'none';
+              // Don't announce here, as it might be annoying on every click
+         }
+     });
+
+
+    function applyToggleState(button, className, stateName) {
+        const isPressed = button.getAttribute('aria-pressed') === 'true';
+        button.setAttribute('aria-pressed', !isPressed);
+        body.classList.toggle(className, !isPressed);
+        announce(`${stateName} ${!isPressed ? 'enabled' : 'disabled'}`);
+    }
+
+    highContrastToggle.addEventListener('click', () => applyToggleState(highContrastToggle, 'high-contrast', 'High contrast mode'));
+    largeTextToggle.addEventListener('click', () => applyToggleState(largeTextToggle, 'large-text', 'Large text mode'));
+    reducedMotionToggle.addEventListener('click', () => applyToggleState(reducedMotionToggle, 'reduced-motion', 'Reduced motion mode'));
+    offlineModeToggle.addEventListener('click', () => {
+        const isPressed = offlineModeToggle.getAttribute('aria-pressed') === 'true';
+        // Simulate offline toggle - real implementation relies on browser events
+        body.classList.toggle('offline', !isPressed);
+        offlineModeToggle.setAttribute('aria-pressed', !isPressed);
+        announce(`Offline mode simulation ${!isPressed ? 'enabled' : 'disabled'}`);
+    });
+
+    // --- View Switching (Student/Educator) ---
+    viewToggle.addEventListener('click', () => {
+        const isStudentView = currentRoleView === 'student-view';
+        currentRoleView = isStudentView ? 'educator-view' : 'student-view';
+
+        // Always switch to the dashboard of the new role
+        switchView(currentRoleView);
+
+        // Update button text and aria-label
+        viewToggleText.textContent = isStudentView ? 'Student View' : 'Educator View';
+        viewToggle.setAttribute('aria-label', `Switch to ${isStudentView ? 'Student View' : 'Educator View'}`);
+
+        // Adjust logo link target if needed (though it defaults to student dashboard)
+        logoLink.setAttribute('data-view', currentRoleView);
+
+        announce(`Switched to ${isStudentView ? 'Educator' : 'Student'} view.`);
+    });
+
+     // --- Navigation ---
+     navLinks.forEach(link => {
+         link.addEventListener('click', (e) => {
+             e.preventDefault();
+             const targetViewId = link.getAttribute('data-view');
+
+             // Basic check if the target view belongs to the current role
+             // Assumes student views don't start with 'educator-' and vice-versa
+             const isEducatorTarget = targetViewId.startsWith('educator');
+             const isCurrentRoleEducator = currentRoleView === 'educator-view';
+
+             if (targetViewId && (isEducatorTarget === isCurrentRoleEducator)) {
+                switchView(targetViewId);
+             } else if (targetViewId) {
+                 // If trying to navigate to a view for the *other* role,
+                 // redirect to the current role's dashboard.
+                 console.warn(`Prevented navigation to ${targetViewId} from ${currentRoleView}. Redirecting to dashboard.`);
+                 switchView(currentRoleView);
+             }
+         });
+     });
+
+     logoLink.addEventListener('click', (e) => {
+         e.preventDefault();
+         // Go back to the main dashboard of the current role
+         switchView(currentRoleView);
+     });
+
+     // Generic handler for "Back to X" buttons
+     function handleBackButton(e) {
+        e.preventDefault();
+        const targetViewId = e.currentTarget.getAttribute('data-target-view');
+        if (targetViewId) {
+            switchView(targetViewId);
+        } else {
+            // Fallback to current role's dashboard if no target specified
+            switchView(currentRoleView);
+        }
+     }
+     backToDashboardButtons.forEach(button => button.addEventListener('click', handleBackButton));
+     backToCoursesButtons.forEach(button => button.addEventListener('click', handleBackButton));
+     backToAssessmentsButtons.forEach(button => button.addEventListener('click', handleBackButton));
+
+
+    // --- Student Dashboard & Course Interactions ---
+    continueCourseButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const course = button.getAttribute('data-course');
+            const targetViewId = button.getAttribute('data-target-view'); // e.g., 'module-view'
+
+            // Update module view content based on course (simple example)
+            const moduleTitle = document.getElementById('module-title');
+            const moduleSubtitle = document.getElementById('module-subtitle');
+            if (moduleTitle && moduleSubtitle) {
+                if (course === 'algebra') {
+                    moduleTitle.textContent = 'Algebra Fundamentals: Linear Equations';
+                    moduleSubtitle.textContent = 'Module 3 of 8 - Continuing where you left off.';
+                } else if (course === 'literature') {
+                    moduleTitle.textContent = 'World Literature: Analysing Poetry';
+                    moduleSubtitle.textContent = 'Module 2 of 5 - Exploring poetic devices.';
+                } else {
+                    moduleTitle.textContent = `${course.charAt(0).toUpperCase() + course.slice(1)} Module`;
+                    moduleSubtitle.textContent = 'Continuing your learning journey.';
+                }
+            }
+            if (targetViewId) {
+                switchView(targetViewId); // Switch to the module/sub-view
+            }
+        });
+    });
+
+    showAssessmentDetailsButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const assessmentId = button.getAttribute('data-assessment');
+            // Example: Show details in a modal
+            toggleModal(true, `Assessment Details: ${assessmentId.replace('-', ' ')}`, `<p>Details about the ${assessmentId} would go here, including criteria, format options, etc.</p>`);
+        });
+    });
+
+     // Button on main assessment page to go to options subview
+     showAssessmentOptionsButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const assessmentId = button.getAttribute('data-assessment'); // e.g., 'algebra-module-3'
+            const optionsView = document.getElementById('assessment-options-subview');
+            const titleEl = document.getElementById('assessment-options-title');
+
+            if (optionsView && titleEl) {
+                // Update the title of the options page
+                 titleEl.textContent = `Assessment Options: ${assessmentId.replace(/-/g, ' ')}`;
+                 // TODO: Potentially load specific options based on assessmentId
+                 switchView('assessment-options-subview');
+            }
+        });
+     });
+
+
+    // --- Module View Interactions ---
+    const moduleView = document.getElementById('module-view');
+    if (moduleView) { // Only add listeners if the module view exists
+        const showVisualBtn = moduleView.querySelector('#show-visual');
+        const showAlgebraicBtn = moduleView.querySelector('#show-algebraic');
+        const solutionVisual = moduleView.querySelector('#solution-visual');
+        const solutionAlgebraic = moduleView.querySelector('#solution-algebraic');
+        const hintButton = moduleView.querySelector('#hint-button');
+        const hintContent = moduleView.querySelector('#hint-content');
+        const applyPrefsBtn = moduleView.querySelector('#apply-preferences');
+        const tryProblemBtn = moduleView.querySelector('#try-problem');
+        const moduleTabs = moduleView.querySelectorAll('.module-nav button[role="tab"]');
+        const moduleTabPanels = moduleView.querySelectorAll('.module-content[role="tabpanel"]');
+        const prevSectionBtn = moduleView.querySelector('#prev-section');
+        const nextSectionBtn = moduleView.querySelector('#next-section');
+
+        function toggleSolution(button, contentElement) {
+            const isExpanded = button.getAttribute('aria-expanded') === 'true';
+            button.setAttribute('aria-expanded', !isExpanded);
+            contentElement.style.display = isExpanded ? 'none' : 'block';
+            announce(`${button.textContent} ${isExpanded ? 'hidden' : 'shown'}`);
+        }
+
+        if (showVisualBtn && solutionVisual) showVisualBtn.addEventListener('click', () => toggleSolution(showVisualBtn, solutionVisual));
+        if (showAlgebraicBtn && solutionAlgebraic) showAlgebraicBtn.addEventListener('click', () => toggleSolution(showAlgebraicBtn, solutionAlgebraic));
+        if (hintButton && hintContent) hintButton.addEventListener('click', () => toggleSolution(hintButton, hintContent));
+
+        if (applyPrefsBtn) {
+            applyPrefsBtn.addEventListener('click', () => {
+                const style = moduleView.querySelector('#content-style')?.value;
+                const difficulty = moduleView.querySelector('#difficulty')?.value;
+                const pace = moduleView.querySelector('#pace')?.value;
+                announce(`Preferences applied: Style ${style}, Difficulty ${difficulty}, Pace ${pace}. Content adapting.`);
+                console.log('Preferences Applied:', { style, difficulty, pace });
+                 // Simulate content adaptation
+                 const contentPanel = moduleView.querySelector('#tabpanel-content');
+                 if(contentPanel) {
+                     const originalHTML = contentPanel.innerHTML; // Store original
+                     contentPanel.innerHTML = '<p style="font-style: italic; color: var(--primary); padding: 1rem;">Adapting content based on your preferences...</p>';
+                     setTimeout(() => {
+                         // Restore original - In real app, new content would load
+                         // This check ensures we don't restore if the view changed
+                         if (document.getElementById('module-view')?.classList.contains('active')) {
+                            // Find the panel again in case DOM changed
+                            const currentContentPanel = document.getElementById('tabpanel-content');
+                            if (currentContentPanel) currentContentPanel.innerHTML = originalHTML;
+                         }
+                    }, 1500);
+                 }
+            });
+        }
+
+        if (tryProblemBtn) {
+            tryProblemBtn.addEventListener('click', () => {
+                 announce('Interactive problem launched. Please solve the system.');
+                 toggleModal(true, 'Practice Problem', '<p>Interactive problem component would load here.</p>');
+            });
+        }
+
+         // Module Tabs Logic
+         moduleTabs.forEach(tab => {
+             tab.addEventListener('click', () => {
+                 moduleTabs.forEach(t => {
+                     t.setAttribute('aria-selected', 'false');
+                     t.setAttribute('tabindex', '-1');
+                     t.classList.remove('active');
+                 });
+                 moduleTabPanels.forEach(p => p.hidden = true);
+
+                 tab.setAttribute('aria-selected', 'true');
+                 tab.setAttribute('tabindex', '0');
+                 tab.classList.add('active');
+                 const controlledPanel = moduleView.querySelector(`#${tab.getAttribute('aria-controls')}`);
+                 if (controlledPanel) {
+                     controlledPanel.hidden = false;
+                     announce(`Selected tab: ${tab.textContent}`);
+                 }
+                 tab.focus();
+             });
+              // Keyboard navigation for tabs
+             tab.addEventListener('keydown', (e) => { /* ... (key nav logic as before) ... */ });
+         });
+
+         if (prevSectionBtn) prevSectionBtn.addEventListener('click', () => announce('Navigating to previous section (simulated).'));
+         if (nextSectionBtn) nextSectionBtn.addEventListener('click', () => announce('Navigating to next section (simulated).'));
+    } // End if (moduleView)
+
+
+    // --- Assessment Options Sub-View Interactions ---
+    const assessmentOptionsView = document.getElementById('assessment-options-subview');
+    if (assessmentOptionsView) {
+        const assessmentOptions = assessmentOptionsView.querySelectorAll('.assessment-option[role="radio"]');
+        const confirmAssessmentBtn = assessmentOptionsView.querySelector('#confirm-assessment');
+
+         assessmentOptions.forEach(option => {
+             const selectOption = () => {
+                 assessmentOptions.forEach(opt => {
+                     opt.classList.remove('selected');
+                     opt.setAttribute('aria-checked', 'false');
+                 });
+                 option.classList.add('selected');
+                 option.setAttribute('aria-checked', 'true');
+                 const optionName = option.querySelector('h3').textContent;
+                 announce(`Selected assessment option: ${optionName}`);
+                 option.focus();
+             };
+             option.addEventListener('click', selectOption);
+             option.addEventListener('keydown', (e) => { /* ... (key nav logic as before) ... */ });
+         });
+
+        if (confirmAssessmentBtn) {
+            confirmAssessmentBtn.addEventListener('click', () => {
+                const selectedOption = assessmentOptionsView.querySelector('.assessment-option[aria-checked="true"]');
+                const optionName = selectedOption ? selectedOption.querySelector('h3').textContent : 'None';
+                announce(`Assessment selection confirmed: ${optionName}. Starting assessment (simulated).`);
+                toggleModal(true, `Starting Assessment: ${optionName}`, '<p>The assessment interface would load here.</p>');
+                // Potentially navigate away or replace content after modal confirmation
+            });
+        }
+    } // End if(assessmentOptionsView)
+
+    // Add listeners for other general buttons if needed
+    document.getElementById('learn-more-assessments-main')?.addEventListener('click', () => {
+        toggleModal(true, 'Assessment Fairness', '<p>Detailed information about how FairLearn ensures assessment fairness...</p>');
+    });
+
+
+    // --- Educator View Interactions ---
+    const educatorView = document.getElementById('educator-view');
+    if (educatorView) {
+        const educatorTabs = educatorView.querySelectorAll('.tabs .tab');
+        const educatorPanels = educatorView.querySelectorAll('div[role="tabpanel"]');
+
+        educatorTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                educatorTabs.forEach(t => {
+                    t.classList.remove('active');
+                    t.setAttribute('aria-selected', 'false');
+                    t.setAttribute('tabindex', '-1');
+                });
+                educatorPanels.forEach(p => p.hidden = true);
+
+                tab.classList.add('active');
+                tab.setAttribute('aria-selected', 'true');
+                tab.setAttribute('tabindex', '0');
+                const panelId = tab.getAttribute('aria-controls');
+                const panel = educatorView.querySelector(`#${panelId}`);
+                if (panel) {
+                    panel.hidden = false;
+                    announce(`Selected educator tab: ${tab.textContent}`);
+                }
+                 tab.focus();
+            });
+            // Keyboard nav for educator tabs
+            tab.addEventListener('keydown', (e) => { /* ... (key nav logic as before) ... */ });
+        });
+
+        // Add basic click handlers for other educator buttons
+        educatorView.querySelectorAll('button:not(.tab)').forEach(button => {
+                button.addEventListener('click', () => {
+                     announce(`Button clicked: ${button.textContent.trim()} (Action simulated).`);
+                     console.log(`Educator button clicked: ${button.textContent.trim()}`);
+                     if (button.textContent.includes('View Details') || button.textContent.includes('Recommendations') || button.textContent.includes('Export')) {
+                        toggleModal(true, `Details: ${button.closest('.student-item')?.querySelector('strong')?.textContent || 'Class Data'}`);
+                     }
+                });
+        });
+    } // End if(educatorView)
+
+
+    // --- Modal Interactions ---
+     modalCloseButtons.forEach(button => {
+         button.addEventListener('click', () => toggleModal(false));
+     });
+     modalBackdrop.addEventListener('click', (e) => {
+         if (e.target === modalBackdrop) {
+             toggleModal(false);
+         }
+     });
+     modalBackdrop.addEventListener('keydown', (e) => {
+         if (e.key === 'Escape') {
+             toggleModal(false);
+         }
+         // Basic focus trapping
+         if (e.key === 'Tab') { /* ... (focus trap logic as before) ... */ }
+     });
+     document.getElementById('modal-confirm')?.addEventListener('click', () => {
+         announce('Modal action confirmed (simulated).');
+         console.log('Modal action confirmed.');
+         toggleModal(false);
+     });
+
+    // --- Initial Setup ---
+    // Determine initial view based on URL hash or default
+    let initialView = currentRoleView; // Default to student/educator dashboard
+    const hash = window.location.hash.substring(1);
+    if (hash && document.getElementById(hash) && Array.from(navLinks).some(link => link.getAttribute('data-view') === hash)) {
+         // Only activate hash view if it's a valid top-level nav view
+         initialView = hash;
+         // Update currentRoleView if hash indicates educator view
+         if(initialView.startsWith('educator')) {
+            currentRoleView = 'educator-view';
+            viewToggleText.textContent = 'Student View';
+            viewToggle.setAttribute('aria-label', `Switch to Student View`);
+            logoLink.setAttribute('data-view', currentRoleView);
+         }
+    } else {
+        // Clear hash if it's invalid or not a primary view
+        if (history.replaceState) {
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+        }
+    }
+
+    console.log(`Initial view set to: ${initialView}`);
+    switchView(initialView, { updateHistory: false }); // Show initial view without pushing state
+
+     // Check initial prefers-reduced-motion
+     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+         body.classList.add('reduced-motion');
+         reducedMotionToggle.setAttribute('aria-pressed', 'true');
+     }
+     // Check initial offline status
+     function updateOnlineStatus() {
+        const isOnline = navigator.onLine;
+        body.classList.toggle('offline', !isOnline);
+        offlineModeToggle.setAttribute('aria-pressed', !isOnline);
+        console.log(`Network status: ${isOnline ? 'Online' : 'Offline'}`);
+     }
+     window.addEventListener('online', () => { updateOnlineStatus(); announce('Connection restored. Online mode enabled.'); });
+     window.addEventListener('offline', () => { updateOnlineStatus(); announce('Connection lost. Offline mode enabled.'); });
+     updateOnlineStatus(); // Check status on load
+
+});
+</script>
+
+</body>
+</html>
